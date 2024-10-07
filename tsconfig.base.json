@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "reveal-sdk-wrappers": ["packages/wrappers/src/index.ts"]
+      "reveal-sdk-wrappers": ["packages/wrappers/src/index.ts"],
+      "reveal-sdk-wrappers-react": ["packages/wrappers-react/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

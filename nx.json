@@ -35,6 +35,22 @@
       "linter": "none",
       "unitTestRunner": "none",
       "e2eTestRunner": "none"
+    },
+    "@nx/react": {
+      "library": {
+        "style": "css",
+        "linter": "none",
+        "unitTestRunner": "none"
+      },
+      "application": {
+        "babel": true,
+        "style": "css",
+        "linter": "none",
+        "bundler": "vite"
+      },
+      "component": {
+        "style": "css"
+      }
     }
   }
 }
