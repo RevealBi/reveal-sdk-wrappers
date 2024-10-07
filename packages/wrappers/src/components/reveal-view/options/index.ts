@@ -1,0 +1,1 @@
+export type { RevealViewOptions } from "./reveal-view-options";

@@ -1,0 +1,17 @@
+{
+  "name": "reveal-sdk-wrappers",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./index.umd.js",
+  "module": "./index.js",
+  "typings": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./index.umd.js"
+    }
+  },
+  "dependencies": {
+    "lit": "^3.2.1"
+  }
+}
