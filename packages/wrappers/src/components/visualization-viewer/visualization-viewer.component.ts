@@ -14,11 +14,6 @@ declare let $: any;
 export class RvVisualizationViewer extends LitElement {
     static override styles = styles;
     static readonly tagName = 'rv-visualization-viewer';
-    static register() {
-        if (!customElements.get(RvVisualizationViewer.tagName)) {
-            customElements.define(RvVisualizationViewer.tagName, RvVisualizationViewer);
-        }
-    }
 
     private _revealView: any = null;
     private _mergedOptions: VisualizationViewerOptions = {};

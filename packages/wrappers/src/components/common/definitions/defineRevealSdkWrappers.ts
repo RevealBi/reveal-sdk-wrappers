@@ -3,7 +3,6 @@ import { RvVisualizationViewer } from "../../visualization-viewer";
 
 type RevealSdkWrapperComponent = CustomElementConstructor & {
     tagName: string;
-    register: () => void;
 };
 
 export function defineRevealSdkWrappers(...components: RevealSdkWrapperComponent[]) {

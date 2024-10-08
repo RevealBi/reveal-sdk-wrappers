@@ -19,11 +19,6 @@ declare let $: any;
 export class RvRevealView extends LitElement {
     static override styles = styles;
     static readonly tagName = 'rv-reveal-view';
-    static register() {
-        if (!customElements.get(RvRevealView.tagName)) {
-            customElements.define(RvRevealView.tagName, RvRevealView);
-        }
-    }
 
     private _revealView: any = null;
     private _mergedOptions: RevealViewOptions = {};
