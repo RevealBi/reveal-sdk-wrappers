@@ -22,7 +22,7 @@ export class RevealViewComponent {
   /**
    * Gets or sets the options for the RevealView component.
    */
-  @Input() options?: RevealViewOptions;
+  @Input() options: RevealViewOptions ={};
 
   /**
    * Callback triggered when data sources are requested.     
@@ -48,6 +48,5 @@ export class RevealViewComponent {
    */
   public enterEditMode(): void {
     this.revealView.nativeElement.enterEditMode();
-  }
-  
+  }  
 }

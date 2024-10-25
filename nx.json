@@ -14,6 +14,11 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["default", "^default"]
+    },
+    "@angular-devkit/build-angular:browser": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
     }
   },
   "release": {
@@ -72,6 +77,12 @@
     },
     "@nx/angular:component": {
       "style": "scss"
+    },
+    "@nx/angular:application": {
+      "e2eTestRunner": "none",
+      "linter": "none",
+      "style": "scss",
+      "unitTestRunner": "none"
     }
   }
 }
