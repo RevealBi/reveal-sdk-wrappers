@@ -181,7 +181,7 @@ export class RvRevealView extends LitElement {
         this._revealView.interactiveFilteringEnabled = true;
 
         //this event must be set BEFORE the dashboard is set
-        this.assignHandler(this.dataLoading, 'onDataLoading', (e: any) => e);
+        this.assignHandler(this.dataLoading, 'onVisualizationDataLoading', (e: any) => e);
 
         this.updateOptions(options);
         this.initializeEvents();
