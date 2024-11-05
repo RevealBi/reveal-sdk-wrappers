@@ -7,6 +7,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": false,
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
@@ -16,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "reveal-sdk-wrappers": ["packages/wrappers/src/index.ts"],
+      "reveal-sdk-wrappers-angular": ["packages/wrappers-angular/src/index.ts"],
       "reveal-sdk-wrappers-react": ["packages/wrappers-react/src/index.ts"]
     }
   },
