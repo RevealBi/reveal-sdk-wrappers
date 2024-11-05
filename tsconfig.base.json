@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "reveal-sdk-wrappers": ["packages/wrappers/src/index.ts"],
+      "reveal-sdk-wrappers-angular": ["packages/wrappers-angular/src/index.ts"],
       "reveal-sdk-wrappers-react": ["packages/wrappers-react/src/index.ts"]
     }
   },
