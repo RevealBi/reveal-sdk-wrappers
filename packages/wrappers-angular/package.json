@@ -1,7 +1,6 @@
 {
   "name": "reveal-sdk-wrappers-angular",
   "version": "0.0.1",
-  "type": "module",
   "peerDependencies": {
     "@angular/common": "^18.1.0",
     "@angular/core": "^18.1.0",
