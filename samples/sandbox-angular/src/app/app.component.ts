@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DataSourcesRequestedArgs, RevealViewOptions } from 'reveal-sdk-wrappers';
-import { RevealViewComponent } from 'reveal-sdk-wrappers-angular';
+import { RevealViewComponent, VisualizationViewerComponent } from 'reveal-sdk-wrappers-angular';
 
 declare const $: any;
 $.ig.RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/reveal-api/");
 
 @Component({
   standalone: true,
-  imports: [RouterModule, RevealViewComponent],
+  imports: [RouterModule, RevealViewComponent, VisualizationViewerComponent],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
