@@ -363,14 +363,6 @@ export class RvRevealView extends LitElement {
     }
 
     /**
-     * Adds a visualization to the dashboard.
-     * @returns {void}
-     */
-    addVisualization(): void {
-        this._revealView._dashboardView._delegate.addWidgetTriggered();
-    }
-
-    /**
      * Adds a textbox visualization to the dashboard.
      * @returns {void}
      */
@@ -382,11 +374,26 @@ export class RvRevealView extends LitElement {
     }
 
     /**
-     * Gets the RVDashboard instance from the underlying RevealView object.
-     * @returns {RVDashboard} The RVDashboard instance.
+     * Adds a visualization to the dashboard.
+     * @returns {void}
      */
-    getRVDashboard(): any {
-        return this._revealView ? this._revealView.dashboard : null;
+    addVisualization(): void {
+        this._revealView._dashboardView._delegate.addWidgetTriggered();
+    }
+
+    /**
+     * Copies a visualization to the clipboard.
+     * If a string ID is provided, the visualization with that ID is copied.
+     * If a number index is provided, the visualization at that index is copied.
+     * @param {string | number} input The ID or index of the visualization to copy
+     * @returns {void}
+     */
+    copy(input: string | number): void {
+        const widgets = this._revealView._dashboardView.__widgets;
+        const sourceWidget = typeof input === "string" ? widgets.find((widget: any) => widget._widget._id === input) : widgets[input];
+        if (sourceWidget) {
+            this._revealView._dashboardView.widgetCopied(sourceWidget._widget);
+        }
     }
 
     /**
@@ -443,6 +450,24 @@ export class RvRevealView extends LitElement {
      */
     exportToPowerPoint(): void {
         this._revealView._dashboardView.exportToFormat("pptx");
+    }
+
+    /**
+     * Gets the RVDashboard instance from the underlying RevealView object.
+     * @returns {RVDashboard} The RVDashboard instance.
+     */
+    getRVDashboard(): any {
+        return this._revealView ? this._revealView.dashboard : null;
+    }
+
+    /**
+     * Pastes a visualization from the clipboard.
+     * If a target RevealView component is provided, the visualization is pasted to that component.
+     * @param {RvRevealView} target The target RevealView component to paste the visualization to.
+     * @returns {void}
+     */
+    paste(target?: RvRevealView): void {
+        target?.paste() ?? this._revealView._dashboardView.pasteWidget();
     }
 
     /**

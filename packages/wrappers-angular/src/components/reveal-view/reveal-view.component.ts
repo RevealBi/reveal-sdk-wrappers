@@ -97,4 +97,12 @@ export class RevealViewComponent {
   public getRVDashboard(): any {
     return this.revealView.nativeElement.getRVDashboard();
   }
+
+  public copy(input: string | number): void {
+    this.revealView.nativeElement.copy(input);
+  }
+
+  public paste(target?: RvRevealView): void {
+    this.revealView.nativeElement.paste(target);
+  }
 }
