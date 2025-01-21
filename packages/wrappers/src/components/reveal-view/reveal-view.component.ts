@@ -328,7 +328,9 @@ export class RvRevealView extends LitElement {
                 createMenuItems(vizItems, vizItem => vizItem.click(viz));
             }
 
-            this.assignHandler(this.menuOpening, 'onMenuOpening', (e: any) => e);
+            this.assignHandler(this.menuOpening, 'onMenuOpening', (visualization: any, e: any) => {
+                return { cancel: e.cancel, isInEditMode: e.isInEditMode, menuLocation: e.menuLocation, menuItems: e.menuItems, visualization: visualization };
+            });
         };
 
         this._revealView.onDataSourcesRequested = (onComplete: any, trigger: any) => {

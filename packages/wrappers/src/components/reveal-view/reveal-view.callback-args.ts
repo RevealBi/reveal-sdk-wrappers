@@ -91,7 +91,7 @@ export interface LinkSelectionDialogOpeningArgs {
 export interface MenuOpeningArgs {
     cancel: boolean;
     readonly isInEditMode: boolean;
-    menuItems: any[];
+    readonly menuItems: any[];
     readonly menuLocation: any;
     readonly visualization: any;
 }
