@@ -233,16 +233,6 @@ export class RvRevealView extends LitElement {
             }
         }
 
-        // //header
-        // this._revealView.showHeader = this._mergedOptions.header!.showHeader;
-        // this._revealView.canAddVisualization = this._mergedOptions.header!.canAddVisualization;
-        // this._revealView.showMenu = this._mergedOptions.header!.menu!.showMenu;
-        // this._revealView.showExportToExcel = this._mergedOptions.header!.menu!.exportToExcel;
-        // this._revealView.showExportImage = this._mergedOptions.header!.menu!.exportToImage;
-        // this._revealView.showExportToPDF = this._mergedOptions.header!.menu!.exportToPdf;
-        // this._revealView.showExportToPowerPoint = this._mergedOptions.header!.menu!.exportToPowerPoint;
-        // this._revealView.showRefresh = this._mergedOptions.header!.menu!.refresh;
-
         //filters
         this._revealView.showFilters = this._mergedOptions.filters!.showFilters;
         this._revealView.canAddDashboardFiter = this._mergedOptions.filters!.addDashboardFiter;

@@ -7,13 +7,12 @@ export interface VisualizationViewerOptions {
     hoverTooltips?: boolean;
     changeChartType?: boolean;
     statisticalFunctions?: boolean;
-    menu?: {
+    menu?: boolean | {
         items?: MenuItem[];
         copy?: boolean;
         duplicate?: boolean;
         exportToExcel?: boolean;
         exportToImage?: boolean;
-        showMenu?: boolean;
         refresh?: boolean;
     }
 }

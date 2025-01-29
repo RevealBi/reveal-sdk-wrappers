@@ -45,10 +45,12 @@ export class RvVisualizationViewer extends LitElement {
                 return;
             }
             else {
-                const vizItems = this._mergedOptions.menu!.items!;
-                vizItems.forEach(vizItem => {
-                    e.menuItems.push(new $.ig.RVMenuItem(vizItem.title, vizItem.icon, () => vizItem.click(viz)));
-                })
+                if (typeof this._mergedOptions.menu !== 'boolean' && this._mergedOptions.menu && this._mergedOptions.menu.items) {
+                    const vizItems = this._mergedOptions.menu.items;
+                    vizItems.forEach(vizItem => {
+                        e.menuItems.push(new $.ig.RVMenuItem(vizItem.title, vizItem.icon, () => vizItem.click(viz)));
+                    })
+                }
             }
         }
     }
@@ -101,20 +103,22 @@ export class RvVisualizationViewer extends LitElement {
 
         this._mergedOptions = merge({}, VisualizationViewerDefaults, options);
 
-        this._revealView.showExportToExcel = this._mergedOptions.menu!.exportToExcel;
-        this._revealView.showExportImage = this._mergedOptions.menu!.exportToImage;
-        this._revealView.showMenu = this._mergedOptions.menu!.showMenu;
-        this._revealView.showRefresh = this._mergedOptions.menu!.refresh;
+        if (typeof this._mergedOptions.menu === 'boolean') {
+            this._revealView.showMenu = this._mergedOptions.menu;
+        } else if (this._mergedOptions.menu) {
+            this._revealView.canCopyVisualization = this._mergedOptions.menu!.copy;
+            this._revealView.canDuplicateVisualization = this._mergedOptions.menu!.duplicate;
+            this._revealView.showExportToExcel = this._mergedOptions.menu!.exportToExcel;
+            this._revealView.showExportImage = this._mergedOptions.menu!.exportToImage;
+            this._revealView.showRefresh = this._mergedOptions.menu!.refresh;
+        }
 
         this._revealView.showFilters = this._mergedOptions.showFilters;
-
         this._revealView.categoryGroupingSeparator = this._mergedOptions.categoryGroupingSeparator;
         this._revealView.crosshairsEnabled = this._mergedOptions.crosshairs;
         this._revealView.hoverTooltipsEnabled = this._mergedOptions.hoverTooltips;
         this._revealView.showChangeVisualization = this._mergedOptions.changeChartType;
         this._revealView.showStatisticalFunctions = this._mergedOptions.statisticalFunctions;
-        this._revealView.canCopyVisualization = this._mergedOptions.menu!.copy;
-        this._revealView.canDuplicateVisualization = this._mergedOptions.menu!.duplicate;
     }
 
     private updateVisualization(visualization?: string | number) {
