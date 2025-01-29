@@ -32,7 +32,7 @@ export interface RevealViewOptions {
      * Gets or sets if the DashboardViewer should start with a new visualization.
      */
     startWithNewVisualization?: boolean;
-    header?: HeaderOptions;
+    header?: HeaderOptions | boolean;
     filters?: FilterOptions;
     dataSourceDialog?: DataSourceDialogOptions;
     visualizations?: VisualizationOptions;
@@ -130,15 +130,8 @@ export interface HeaderOptions {
      * Gets or sets if the user can add a new visualization.
      */
     canAddVisualization?: boolean;
-    /**
-     * Gets or sets if the header is shown.
-     */
-    showHeader?: boolean;
-    menu?: {
-        /**
-         * Gets or sets if the menu is shown.
-         */
-        showMenu?: boolean;
+
+    menu?: boolean | {
         /**
          * Gets or sets if the menu item "Export to Image" is shown.
          */
