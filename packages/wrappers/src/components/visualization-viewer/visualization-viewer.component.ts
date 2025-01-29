@@ -106,11 +106,11 @@ export class RvVisualizationViewer extends LitElement {
         if (typeof this._mergedOptions.menu === 'boolean') {
             this._revealView.showMenu = this._mergedOptions.menu;
         } else if (this._mergedOptions.menu) {
-            this._revealView.canCopyVisualization = this._mergedOptions.menu!.copy;
-            this._revealView.canDuplicateVisualization = this._mergedOptions.menu!.duplicate;
-            this._revealView.showExportToExcel = this._mergedOptions.menu!.exportToExcel;
-            this._revealView.showExportImage = this._mergedOptions.menu!.exportToImage;
-            this._revealView.showRefresh = this._mergedOptions.menu!.refresh;
+            this._revealView.canCopyVisualization = this._mergedOptions.menu.copy;
+            this._revealView.canDuplicateVisualization = this._mergedOptions.menu.duplicate;
+            this._revealView.showExportToExcel = this._mergedOptions.menu.exportToExcel;
+            this._revealView.showExportImage = this._mergedOptions.menu.exportToImage;
+            this._revealView.showRefresh = this._mergedOptions.menu.refresh;
         }
 
         this._revealView.showFilters = this._mergedOptions.showFilters;
