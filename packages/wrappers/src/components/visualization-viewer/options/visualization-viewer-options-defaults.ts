@@ -13,7 +13,6 @@ export const VisualizationViewerDefaults: VisualizationViewerOptions = Object.fr
         duplicate: true,
         exportToExcel: true,
         exportToImage: true,
-        showMenu: false,
         refresh: true,
     }
 });

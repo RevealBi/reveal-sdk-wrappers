@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import styles from './app.module.scss';
 import { RvRevealView, RvRevealViewRef } from 'reveal-sdk-wrappers-react';
-import { RevealViewOptions } from 'reveal-sdk-wrappers';
+import { MenuOpeningArgs, RevealViewOptions, SeriesColorRequestedArgs } from 'reveal-sdk-wrappers';
 
 declare const $: any;
 $.ig.RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/reveal-api/");
@@ -10,13 +10,15 @@ $.ig.RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/r
 export function App() {
 
   const rvRef = useRef<RvRevealViewRef>(null);
-  const [dashboard, setDashboard] = useState<string>("Campaigns");
+  const [dashboard, setDashboard] = useState<string>("Marketing");
   const options: RevealViewOptions = {
+    startInEditMode: false,
     dataSources: [
       { type: "REST", title: "Sales by Category", subtitle: "Excel2Json", url: "https://excel2json.io/api/share/6e0f06b3-72d3-4fec-7984-08da43f56bb9" },
     ],
     header: {
       menu: {
+        exportToPowerPoint: false,
         items: [
           { title: "Item 1", click: () => console.log(rvRef.current?.getRVDashboard())},
           { title: "Item 2", click: () => alert("Item 2") },
@@ -25,10 +27,23 @@ export function App() {
       }
     },
   }
-  
+
+  const menuOpening = (args: MenuOpeningArgs) => {
+    if (args.visualization) {
+      args.menuItems[6].isHidden = true; //hide the delete button
+      const newDeleteButton = new $.ig.RVMenuItem("Delete", null, () => {
+        //todo: do you custom code here
+
+        //perform the built-in delete operation using a backdoor
+        (rvRef.current as any)?._revealView._dashboardView.deleteWidgetFromDashboard(args.visualization._widgetModel)                      
+      });
+      args.menuItems.push(newDeleteButton);
+    }
+  }
+
   return (
     <div  style={{height: '100%'}}>
-      <RvRevealView ref={rvRef} dashboard={dashboard} options={options}></RvRevealView>
+      <RvRevealView ref={rvRef} dashboard={dashboard} options={options} menuOpening={menuOpening}></RvRevealView>
     </div>
   );
 }

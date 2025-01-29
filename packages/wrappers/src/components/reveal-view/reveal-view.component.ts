@@ -217,14 +217,21 @@ export class RvRevealView extends LitElement {
         this._revealView.startWithNewVisualization = this._mergedOptions.startWithNewVisualization;
 
         //header
-        this._revealView.showHeader = this._mergedOptions.header!.showHeader;
-        this._revealView.canAddVisualization = this._mergedOptions.header!.canAddVisualization;
-        this._revealView.showMenu = this._mergedOptions.header!.menu!.showMenu;
-        this._revealView.showExportToExcel = this._mergedOptions.header!.menu!.exportToExcel;
-        this._revealView.showExportImage = this._mergedOptions.header!.menu!.exportToImage;
-        this._revealView.showExportToPDF = this._mergedOptions.header!.menu!.exportToPdf;
-        this._revealView.showExportToPowerPoint = this._mergedOptions.header!.menu!.exportToPowerPoint;
-        this._revealView.showRefresh = this._mergedOptions.header!.menu!.refresh;
+        if (typeof this._mergedOptions.header === 'boolean') {
+            this._revealView.showHeader = this._mergedOptions.header;
+        } else if (this._mergedOptions.header) {
+            this._revealView.canAddVisualization = this._mergedOptions.header.canAddVisualization;
+        
+            if (typeof this._mergedOptions.header.menu === 'boolean') {
+                this._revealView.showMenu = this._mergedOptions.header.menu;
+            } else if (this._mergedOptions.header.menu) {
+                this._revealView.showExportToExcel = this._mergedOptions.header.menu.exportToExcel;
+                this._revealView.showExportImage = this._mergedOptions.header.menu.exportToImage;
+                this._revealView.showExportToPDF = this._mergedOptions.header.menu.exportToPdf;
+                this._revealView.showExportToPowerPoint = this._mergedOptions.header.menu.exportToPowerPoint;
+                this._revealView.showRefresh = this._mergedOptions.header.menu.refresh;
+            }
+        }
 
         //filters
         this._revealView.showFilters = this._mergedOptions.filters!.showFilters;
@@ -321,8 +328,10 @@ export class RvRevealView extends LitElement {
             };
 
             if (viz === null) {
-                const items = this._mergedOptions.header!.menu!.items!;
-                createMenuItems(items, item => item.click());
+                if (typeof this._mergedOptions.header !== 'boolean' && this._mergedOptions.header && typeof this._mergedOptions.header.menu !== 'boolean' && this._mergedOptions.header.menu && this._mergedOptions.header.menu.items) {
+                    const items = this._mergedOptions.header.menu.items;
+                    createMenuItems(items, item => item.click());
+                }
             } else {
                 const vizItems = this._mergedOptions.visualizations!.menu!.items!;
                 createMenuItems(vizItems, vizItem => vizItem.click(viz));
