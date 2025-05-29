@@ -235,7 +235,7 @@ export class RvRevealView extends LitElement {
 
         //filters
         this._revealView.showFilters = this._mergedOptions.filters!.showFilters;
-        this._revealView.canAddDashboardFiter = this._mergedOptions.filters!.addDashboardFiter;
+        this._revealView.canAddDashboardFilter = this._mergedOptions.filters!.addDashboardFilter;
         this._revealView.canAddDateFilter = this._mergedOptions.filters!.addDateFilter;
         this._revealView.interactiveFilteringEnabled = this._mergedOptions.filters!.interactiveFiltering;
 

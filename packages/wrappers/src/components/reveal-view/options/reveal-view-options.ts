@@ -122,7 +122,7 @@ export interface FilterOptions {
     /**
      * Gets or sets if the user can add a dashboard filter.
      */
-    addDashboardFiter?: boolean;
+    addDashboardFilter?: boolean;
 }
 
 export interface HeaderOptions {
