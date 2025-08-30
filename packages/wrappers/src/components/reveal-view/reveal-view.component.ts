@@ -169,6 +169,20 @@ export class RvRevealView extends LitElement {
      */
     @property({ type: Function, attribute: false }) tooltipShowing?: (args: TooltipShowingArgs) => void;
 
+    override connectedCallback(): void {
+        super.connectedCallback();
+        window.addEventListener('reveal-theme-changed', this.onRevealThemeChanged);
+    }
+
+    override disconnectedCallback(): void {
+        super.disconnectedCallback();
+        window.removeEventListener('reveal-theme-changed', this.onRevealThemeChanged);
+
+        if (this._revealView) {
+            this._revealView = null;
+        }
+    }
+
     protected override firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
         this.init(this.dashboard, this.options);
     }
@@ -221,7 +235,7 @@ export class RvRevealView extends LitElement {
             this._revealView.showHeader = this._mergedOptions.header;
         } else if (this._mergedOptions.header) {
             this._revealView.canAddVisualization = this._mergedOptions.header.canAddVisualization;
-        
+
             if (typeof this._mergedOptions.header.menu === 'boolean') {
                 this._revealView.showMenu = this._mergedOptions.header.menu;
             } else if (this._mergedOptions.header.menu) {
@@ -336,7 +350,7 @@ export class RvRevealView extends LitElement {
                 const vizItems = this._mergedOptions.visualizations!.menu!.items!;
                 createMenuItems(vizItems, vizItem => vizItem.click(viz));
             }
-            
+
             if (this.menuOpening !== undefined) {
                 this.menuOpening({ cancel: e.cancel, isInEditMode: e.isInEditMode, menuLocation: e.menuLocation, menuItems: e.menuItems, visualization: viz });
             }
@@ -372,6 +386,10 @@ export class RvRevealView extends LitElement {
             };
         }
     }
+
+    private onRevealThemeChanged = () => {
+        this.refreshTheme();
+    };
 
     /**
      * Adds a textbox visualization to the dashboard.
@@ -497,6 +515,14 @@ export class RvRevealView extends LitElement {
         } else {
             this._revealView.refreshDashboardData();
         }
+    }
+
+    /**
+     * Refreshes the theme of the component.
+     * @returns {void}
+     */
+    refreshTheme(): void {
+        this._revealView.refreshTheme();
     }
 
     protected override updated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {

@@ -43,8 +43,14 @@ export function App() {
   }
 
   const onClick = () => {
-    rvViewerRef.current?.copy();
-    rvRef.current?.paste();
+    if ($.ig.RevealSdkSettings.theme.isDark) {
+      $.ig.RevealSdkSettings.theme = new $.ig.MountainLightTheme();
+    }
+    else {
+      $.ig.RevealSdkSettings.theme = new $.ig.MountainDarkTheme();
+    }
+
+    //window.dispatchEvent(new CustomEvent('reveal-theme-changed'));
   }
 
   return (

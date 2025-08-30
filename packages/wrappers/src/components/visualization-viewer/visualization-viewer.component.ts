@@ -22,6 +22,20 @@ export class RvVisualizationViewer extends LitElement {
     @property({ type: Object, attribute: false }) options: VisualizationViewerOptions = {};
     @property({ type: String }) visualization: string | number = 0;
 
+    override connectedCallback(): void {
+        super.connectedCallback();
+        window.addEventListener('reveal-theme-changed', this.onRevealThemeChanged);
+    }
+
+    override disconnectedCallback(): void {
+        super.disconnectedCallback();
+        window.removeEventListener('reveal-theme-changed', this.onRevealThemeChanged);
+
+        if (this._revealView) {
+            this._revealView = null;
+        }
+    }
+
     protected override firstUpdated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
         this.init(this.dashboard, this.visualization, this.options);
     }
@@ -133,6 +147,10 @@ export class RvVisualizationViewer extends LitElement {
         return DashboardLoader.load(dashboard);
     }
 
+    private onRevealThemeChanged = () => {
+        this.refreshTheme();
+    };
+
     /**
      * Copies a visualization to the clipboard.
      * If a string ID is provided, the visualization with that ID is copied.
@@ -152,6 +170,14 @@ export class RvVisualizationViewer extends LitElement {
         if (sourceWidget) {
             this._revealView._dashboardView.widgetCopied(sourceWidget._widget);
         }
+    }
+
+    /**
+     * Refreshes the theme of the component.
+     * @returns {void}
+     */
+    refreshTheme(): void {
+        this._revealView.refreshTheme();
     }
 
     protected override updated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
