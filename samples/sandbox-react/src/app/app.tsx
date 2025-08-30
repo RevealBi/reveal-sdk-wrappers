@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useRef, useState } from 'react';
 import styles from './app.module.scss';
-import { RvRevealView, RvRevealViewRef } from 'reveal-sdk-wrappers-react';
+import { RvRevealView, RvRevealViewRef, RvVisualizationViewer, RvVisualizationViewerRef } from 'reveal-sdk-wrappers-react';
 import { MenuOpeningArgs, RevealViewOptions, SeriesColorRequestedArgs } from 'reveal-sdk-wrappers';
 
 declare const $: any;
@@ -10,6 +10,7 @@ $.ig.RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/r
 export function App() {
 
   const rvRef = useRef<RvRevealViewRef>(null);
+  const rvViewerRef = useRef<RvVisualizationViewerRef>(null);
   const [dashboard, setDashboard] = useState<string>("Marketing");
   const options: RevealViewOptions = {
     startInEditMode: false,
@@ -41,8 +42,20 @@ export function App() {
     }
   }
 
+  const onClick = () => {
+    rvViewerRef.current?.copy();
+    rvRef.current?.paste();
+  }
+
   return (
     <div  style={{height: '100%'}}>
+      <button onClick={onClick}>Switch Dashboard</button>
+      <RvVisualizationViewer ref={rvViewerRef} dashboard={dashboard} visualization={0} style={{height: 400}}
+        options={{
+          menu: {
+            copy: false,
+          }
+        }}></RvVisualizationViewer>
       <RvRevealView ref={rvRef} dashboard={dashboard} options={options} menuOpening={menuOpening}></RvRevealView>
     </div>
   );

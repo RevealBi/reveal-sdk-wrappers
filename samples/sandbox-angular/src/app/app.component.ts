@@ -26,7 +26,14 @@ export class AppComponent {
       }
     },
     dataSources: [
-      { type: "REST", title: "Sales by Category", subtitle: "Excel2Json", url: "https://excel2json.io/api/share/6e0f06b3-72d3-4fec-7984-08da43f56bb9" }
+      { type: "REST", title: "Sales by Category", subtitle: "Excel2Json", url: "https://excel2json.io/api/share/6e0f06b3-72d3-4fec-7984-08da43f56bb9" },
+      {
+        type: "MicrosoftSqlServer", title: "Mart", subtitle: "Data Mart", id: "BR4mart",
+        items: [
+          { id: "BR4", title: "Loans" },
+          { id: "Employee", title: "Employee" },
+        ]
+      }
     ]
   };
 

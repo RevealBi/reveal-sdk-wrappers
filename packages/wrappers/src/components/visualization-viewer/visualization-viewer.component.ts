@@ -18,9 +18,9 @@ export class RvVisualizationViewer extends LitElement {
     private _revealView: any = null;
     private _mergedOptions: VisualizationViewerOptions = {};
 
-    @property({type: String}) dashboard: string | unknown = "";
-    @property({type: Object, attribute: false}) options: VisualizationViewerOptions = {};
-    @property({type: String}) visualization: string | number = 0;
+    @property({ type: String }) dashboard: string | unknown = "";
+    @property({ type: Object, attribute: false }) options: VisualizationViewerOptions = {};
+    @property({ type: String }) visualization: string | number = 0;
 
     protected override firstUpdated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
         this.init(this.dashboard, this.visualization, this.options);
@@ -106,6 +106,7 @@ export class RvVisualizationViewer extends LitElement {
         if (typeof this._mergedOptions.menu === 'boolean') {
             this._revealView.showMenu = this._mergedOptions.menu;
         } else if (this._mergedOptions.menu) {
+            this._revealView.showMenu = true;
             this._revealView.canCopyVisualization = this._mergedOptions.menu.copy;
             this._revealView.canDuplicateVisualization = this._mergedOptions.menu.duplicate;
             this._revealView.showExportToExcel = this._mergedOptions.menu.exportToExcel;
@@ -125,11 +126,32 @@ export class RvVisualizationViewer extends LitElement {
         if (!this._revealView) {
             return;
         }
-        this.setVisualization(this._revealView.dashboard, visualization);        
+        this.setVisualization(this._revealView.dashboard, visualization);
     }
 
     private async loadRVDashboard(dashboard?: string | unknown): Promise<any | null> {
         return DashboardLoader.load(dashboard);
+    }
+
+    /**
+     * Copies a visualization to the clipboard.
+     * If a string ID is provided, the visualization with that ID is copied.
+     * If a number index is provided, the visualization at that index is copied.
+     * @param {string | number} input The ID or index of the visualization to copy
+     * @returns {void}
+     */
+    copy(): void {
+        const widgetId = this._revealView.maximizedVisualization.id;
+        if (!widgetId) {
+            console.warn("No visualization is currently loaded to copy.");
+            return;
+        }
+
+        const widgets = this._revealView._dashboardView.__widgets;
+        const sourceWidget = widgets.find((widget: any) => widget._widget._id === widgetId);
+        if (sourceWidget) {
+            this._revealView._dashboardView.widgetCopied(sourceWidget._widget);
+        }
     }
 
     protected override updated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
@@ -158,6 +180,6 @@ export class RvVisualizationViewer extends LitElement {
 
 declare global {
     interface HTMLElementTagNameMap {
-      'rv-visualization-viewer': RvVisualizationViewer;
+        'rv-visualization-viewer': RvVisualizationViewer;
     }
 }
