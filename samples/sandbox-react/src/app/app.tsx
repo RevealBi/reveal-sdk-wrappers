@@ -14,6 +14,7 @@ export function App() {
   const [dashboard, setDashboard] = useState<string>("Marketing");
   const options: RevealViewOptions = {
     startInEditMode: false,
+    canSave: false,
     dataSources: [
       { type: "REST", title: "Sales by Category", subtitle: "Excel2Json", url: "https://excel2json.io/api/share/6e0f06b3-72d3-4fec-7984-08da43f56bb9" },
     ],

@@ -177,7 +177,7 @@ export class RvVisualizationViewer extends LitElement {
      * @returns {void}
      */
     refreshTheme(): void {
-        this._revealView.refreshTheme();
+        this._revealView?.refreshTheme();
     }
 
     protected override updated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {

@@ -225,6 +225,7 @@ export class RvRevealView extends LitElement {
 
         this._revealView.canEdit = this._mergedOptions.canEdit;
         this._revealView.canSave = this._mergedOptions.canSave;
+        this._revealView.showSave = this._mergedOptions.canSave;
         this._revealView.canSaveAs = this._mergedOptions.canSaveAs;
         this._revealView.serverSideSave = this._mergedOptions.saveOnServer;
         this._revealView.startInEditMode = this._mergedOptions.startInEditMode;
@@ -522,7 +523,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     refreshTheme(): void {
-        this._revealView.refreshTheme();
+        this._revealView?.refreshTheme();
     }
 
     protected override updated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
