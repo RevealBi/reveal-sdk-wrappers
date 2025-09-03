@@ -50,8 +50,6 @@ export function App() {
     else {
       $.ig.RevealSdkSettings.theme = new $.ig.MountainDarkTheme();
     }
-
-    //window.dispatchEvent(new CustomEvent('reveal-theme-changed'));
   }
 
   return (

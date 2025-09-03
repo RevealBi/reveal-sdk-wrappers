@@ -121,13 +121,14 @@ export class RvVisualizationViewer extends LitElement {
             this._revealView.showMenu = this._mergedOptions.menu;
         } else if (this._mergedOptions.menu) {
             this._revealView.showMenu = true;
-            this._revealView.canCopyVisualization = this._mergedOptions.menu.copy;
-            this._revealView.canDuplicateVisualization = this._mergedOptions.menu.duplicate;
-            this._revealView.showExportToExcel = this._mergedOptions.menu.exportToExcel;
-            this._revealView.showExportImage = this._mergedOptions.menu.exportToImage;
-            this._revealView.showRefresh = this._mergedOptions.menu.refresh;
+            this._revealView.canCopyVisualization = this._mergedOptions.menu.copy ?? true;
+            this._revealView.canDuplicateVisualization = this._mergedOptions.menu.duplicate ?? true;
+            this._revealView.showExportToExcel = this._mergedOptions.menu.exportToExcel ?? true;
+            this._revealView.showExportImage = this._mergedOptions.menu.exportToImage ?? true;
+            this._revealView.showRefresh = this._mergedOptions.menu.refresh ?? true;
         }
 
+        this._revealView.showExportToPDF =  false; //single viz does not allow export to PDF does it?
         this._revealView.showFilters = this._mergedOptions.showFilters;
         this._revealView.categoryGroupingSeparator = this._mergedOptions.categoryGroupingSeparator;
         this._revealView.crosshairsEnabled = this._mergedOptions.crosshairs;

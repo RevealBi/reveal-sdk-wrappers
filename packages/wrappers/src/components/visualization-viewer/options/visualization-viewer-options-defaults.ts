@@ -7,12 +7,5 @@ export const VisualizationViewerDefaults: VisualizationViewerOptions = Object.fr
     showFilters: false,
     changeChartType: false,
     statisticalFunctions: false,
-    menu: {
-        items: [],
-        copy: true,
-        duplicate: true,
-        exportToExcel: true,
-        exportToImage: true,
-        refresh: true,
-    }
+    menu: false,
 });
