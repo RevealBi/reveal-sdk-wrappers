@@ -4,7 +4,6 @@ import { RevealViewOptions } from "./reveal-view-options";
 export const RevealViewDefaults: RevealViewOptions = Object.freeze({
     canEdit: true,
     canSave: true,
-    canSaveAs: true,
     dataSources: [],
     saveOnServer: true,
     startInEditMode: false,
@@ -18,12 +17,13 @@ export const RevealViewDefaults: RevealViewOptions = Object.freeze({
             exportToPdf: true,
             exportToPowerPoint: true,
             refresh: true,
+            saveAs: true,
             items: [],
         },
     },
 
     filters: {
-        addDashboardFiter: true,
+        addDashboardFilter: true,
         addDateFilter: true,
         interactiveFiltering: true,
         showFilters: true,

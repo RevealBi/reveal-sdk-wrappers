@@ -226,7 +226,6 @@ export class RvRevealView extends LitElement {
         this._revealView.canEdit = this._mergedOptions.canEdit;
         this._revealView.canSave = this._mergedOptions.canSave;
         this._revealView.showSave = this._mergedOptions.canSave;
-        this._revealView.canSaveAs = this._mergedOptions.canSaveAs;
         this._revealView.serverSideSave = this._mergedOptions.saveOnServer;
         this._revealView.startInEditMode = this._mergedOptions.startInEditMode;
         this._revealView.startWithNewVisualization = this._mergedOptions.startWithNewVisualization;
@@ -245,6 +244,7 @@ export class RvRevealView extends LitElement {
                 this._revealView.showExportToPDF = this._mergedOptions.header.menu.exportToPdf;
                 this._revealView.showExportToPowerPoint = this._mergedOptions.header.menu.exportToPowerPoint;
                 this._revealView.showRefresh = this._mergedOptions.header.menu.refresh;
+                this._revealView.canSaveAs = this._mergedOptions.header.menu.saveAs;
             }
         }
 

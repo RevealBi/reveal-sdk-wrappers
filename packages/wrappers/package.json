@@ -1,6 +1,6 @@
 {
   "name": "reveal-sdk-wrappers",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "type": "module",
   "main": "./index.umd.js",
   "module": "./index.js",

@@ -13,10 +13,6 @@ export interface RevealViewOptions {
      */
     canSave?: boolean;
     /**
-     * Gets or sets if the user can save the dashboard as a new dashboard.
-     */
-    canSaveAs?: boolean;
-    /**
      * Gets or sets the data sources that can be used to create dashboards.
      */
     dataSources?: DataSourcesConfig;
@@ -152,6 +148,10 @@ export interface HeaderOptions {
          * Gets or sets if the menu item "Refresh" is shown.
          */
         refresh?: boolean;
+        /**
+         * Gets or sets if the menu item "Save As" is shown.
+         */
+        saveAs?: boolean;
         /**
          * Adds custom menu items to the menu.
          * @example
