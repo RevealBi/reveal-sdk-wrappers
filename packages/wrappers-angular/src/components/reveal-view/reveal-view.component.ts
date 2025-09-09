@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, defineRevealSdkWrappers, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, RevealViewOptions, RvRevealView, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs } from 'reveal-sdk-wrappers';
+import { DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, defineRevealSdkWrappers, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, RevealViewOptions, RvRevealView, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs } from 'reveal-sdk-wrappers';
 defineRevealSdkWrappers(RvRevealView);
 
 @Component({
@@ -34,7 +34,7 @@ defineRevealSdkWrappers(RvRevealView);
   styleUrl: './reveal-view.component.scss',
 })
 export class RevealViewComponent {
-  @ViewChild('viewer', { static: true }) revealView!: ElementRef;
+  @ViewChild('viewer', { static: true }) revealView!: ElementRef<RvRevealView>;
 
   @Input() dashboard?: string | unknown;
   @Input() options: RevealViewOptions = {};
@@ -42,7 +42,7 @@ export class RevealViewComponent {
   @Input() dataPointClicked?: (args: DataPointClickedArgs) => void;
   @Input() dataSourceDialogOpening?: (args: DataSourceDialogOpeningArgs) => void;
   @Input() dataSourcesRequested?: (args: DataSourcesRequestedArgs) => any;
-  @Input() dashboardLinkRequested?: (args: any) => string;
+  @Input() dashboardLinkRequested?: (args: DashboardLinkRequestedArgs) => string | Promise<any> | any;
   @Input() editModeEntered?: (args: EditModeEnteredArgs) => void;
   @Input() editModeExited?: (args: EditModeExitedArgs) => void;
   @Input() editorClosed?: (args: EditorClosedArgs) => void;
@@ -84,6 +84,10 @@ export class RevealViewComponent {
 
   public refreshData(input?: string | number): void {
     this.revealView.nativeElement.refreshData(input);
+  }
+
+  public refreshTheme(): void {
+    this.revealView.nativeElement.refreshTheme();
   }
 
   public addVisualization(): void {

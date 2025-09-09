@@ -82,8 +82,17 @@ export class RvRevealView extends LitElement {
 
     /**
      * Callback triggered when a dashboard link is requested.
+     * Can return a string (dashboard ID/title), Promise<any> (resolving to RVDashboard), or RDashDocument.
+     * @example
+     * ```typescript
+     * revealView.dashboardLinkRequested = (args: DashboardLinkRequestedArgs) => {
+     *   console.log('Dashboard link requested:', args);
+     *   return args.dashboardId;
+     *   //return $.ig.RVDashboard.loadDashboard(args.dashboardId);
+     * }
+     * ```
      */
-    @property({ type: Function, attribute: false }) dashboardLinkRequested?: (args: DashboardLinkRequestedArgs) => string;
+    @property({ type: Function, attribute: false }) dashboardLinkRequested?: (args: DashboardLinkRequestedArgs) => string | Promise<any> | any;
 
     /**
      * Callback triggered when edit mode is entered.
@@ -369,13 +378,25 @@ export class RvRevealView extends LitElement {
             onComplete(new $.ig.RevealDataSources(dataSources, dataSourceItems, this._mergedOptions.dataSourceDialog!.showExistingDataSources));
         };
 
-        this._revealView.onLinkedDashboardProviderAsync = (dashboardId: string, title: string) => {
-            let dashbordLink = dashboardId;
-            if (this.dashboardLinkRequested !== undefined) {
-                dashbordLink = this.dashboardLinkRequested({ dashboardId: dashboardId, title: title });
-            }
-            return $.ig.RVDashboard.loadDashboard(dashbordLink);
-        };
+        // Only hook into onLinkedDashboardProviderAsync if there's a handler
+        if (this.dashboardLinkRequested !== undefined) {
+            this._revealView.onLinkedDashboardProviderAsync = (dashboardId: string, title: string) => {
+                const result = this.dashboardLinkRequested!({ dashboardId: dashboardId, title: title });
+                
+                // Handle string return type (existing behavior)
+                if (typeof result === 'string') {
+                    return $.ig.RVDashboard.loadDashboard(result);
+                }
+                
+                // Handle Promise<any> return type
+                if (result && typeof result.then === 'function') {
+                    return result;
+                }
+                
+                // Use DashboardLoader for consistent handling of RDashDocument and other types
+                return DashboardLoader.load(result);
+            };
+        }
     }
 
     private assignHandler(eventProperty: Function | undefined, eventListenerName: string, handler: Function) {
