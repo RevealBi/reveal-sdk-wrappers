@@ -53,8 +53,7 @@ export function App() {
     }
   }
 
-  const handleDashboardLinkRequested = async (args: DashboardLinkRequestedArgs) => {
-    console.log('Dashboard link requested:', args);
+  const handleDashboardLinkRequested = (args: DashboardLinkRequestedArgs) => {
     //return args.dashboardId;
     
     return $.ig.RVDashboard.loadDashboard(args.dashboardId);
@@ -73,12 +72,12 @@ export function App() {
   return (
     <div style={{ height: '100%' }}>
       <button onClick={onClick}>Switch Dashboard</button>
-      {/* <RvVisualizationViewer ref={rvViewerRef} dashboard={dashboard} visualization={0} style={{height: 400}}
+      <RvVisualizationViewer ref={rvViewerRef} dashboard={dashboard} visualization={0} style={{height: 400}}
         options={{
           menu: {
             copy: false,
           }
-        }}></RvVisualizationViewer> */}
+        }}></RvVisualizationViewer>
       <RvRevealView ref={rvRef} dashboard={dashboard} options={options} menuOpening={menuOpening}
         dashboardLinkRequested={handleDashboardLinkRequested}
       ></RvRevealView>

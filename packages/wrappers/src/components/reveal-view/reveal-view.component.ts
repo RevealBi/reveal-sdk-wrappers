@@ -380,11 +380,12 @@ export class RvRevealView extends LitElement {
 
         // Only hook into onLinkedDashboardProviderAsync if there's a handler
         if (this.dashboardLinkRequested !== undefined) {
+            console.log('Dashboard link request handler assigned.');
             this._revealView.onLinkedDashboardProviderAsync = (dashboardId: string, title: string) => {
                 const result = this.dashboardLinkRequested!({ dashboardId: dashboardId, title: title });
                 
                 // Handle string return type (existing behavior)
-                if (typeof result === 'string') {
+                if (typeof result === 'string') {                    
                     return $.ig.RVDashboard.loadDashboard(result);
                 }
                 
