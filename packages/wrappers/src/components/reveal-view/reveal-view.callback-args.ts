@@ -119,3 +119,11 @@ export interface TooltipShowingArgs {
     readonly row: any;
     readonly visualization: any;
 }
+
+export interface UrlLinkRequestedArgs {
+    readonly cell: any;
+    readonly row: any;
+    readonly target: string;
+    readonly url: string;
+    readonly visualization: any;
+}

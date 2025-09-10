@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { defineRevealSdkWrappers, RvRevealView as WebComponent, RevealViewOptions, DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, DashboardFilters } from 'reveal-sdk-wrappers';
+import { defineRevealSdkWrappers, RvRevealView as WebComponent, RevealViewOptions, DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, UrlLinkRequestedArgs, DashboardFilters } from 'reveal-sdk-wrappers';
 
 // Ensure the web component is defined
 defineRevealSdkWrappers(WebComponent);
@@ -26,6 +26,7 @@ export interface RvRevealViewProps extends React.HTMLAttributes<HTMLElement> {
   saving?: (args: SavingArgs) => void;
   seriesColorRequested?: (args: SeriesColorRequestedArgs) => string;
   tooltipShowing?: (args: TooltipShowingArgs) => void;
+  urlLinkRequested?: (args: UrlLinkRequestedArgs) => string;
 }
 
 export interface RvRevealViewRef {
@@ -83,6 +84,7 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
     saving,
     seriesColorRequested,
     tooltipShowing,
+    urlLinkRequested,
     ...htmlProps 
   } = props;
   
@@ -178,6 +180,10 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
     if (tooltipShowing !== undefined) {
       element.tooltipShowing = tooltipShowing;
     }
+
+    if (urlLinkRequested !== undefined) {
+      element.urlLinkRequested = urlLinkRequested;
+    }
   }, [
     dashboard,
     options,
@@ -199,7 +205,8 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
     menuOpening,
     saving,
     seriesColorRequested,
-    tooltipShowing
+    tooltipShowing,
+    urlLinkRequested
   ]);
 
   // Expose methods and getters through ref

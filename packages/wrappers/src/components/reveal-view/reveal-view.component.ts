@@ -1,5 +1,5 @@
 import { property } from "lit/decorators.js";
-import { DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs } from "./reveal-view.callback-args";
+import { DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, UrlLinkRequestedArgs } from "./reveal-view.callback-args";
 import styles from "./reveal-view.styles";
 import { LitElement, PropertyValueMap, html } from "lit";
 import { MenuItem } from "../common";
@@ -178,6 +178,18 @@ export class RvRevealView extends LitElement {
      */
     @property({ type: Function, attribute: false }) tooltipShowing?: (args: TooltipShowingArgs) => void;
 
+    /**
+     * Callback triggered when a URL link is requested.
+     * @example
+     * ```typescript
+     * revealView.urlLinkRequested = (args: UrlLinkRequestedArgs) => {
+     *   console.log("urlLinkRequested", args);
+     *   return args.url;
+     * }
+     * ```
+     */
+    @property({ type: Function, attribute: false }) urlLinkRequested?: (args: UrlLinkRequestedArgs) => string;
+
     override connectedCallback(): void {
         super.connectedCallback();
         window.addEventListener('reveal-theme-changed', this.onRevealThemeChanged);
@@ -193,21 +205,23 @@ export class RvRevealView extends LitElement {
     }
 
     protected override firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
-        this.init(this.dashboard, this.options);
+        this.init(this.dashboard, this.options, changedProperties);
     }
 
-    private async init(dashboard?: string | unknown, options?: RevealViewOptions): Promise<void> {
+    private async init(dashboard?: string | unknown, options?: RevealViewOptions, changedProperties?: Map<PropertyKey, unknown>): Promise<void> {
         const rvDashboard = await this.loadRVDashboard(dashboard);
 
         const selector = this.renderRoot.querySelector('#rv-viewer');
         this._revealView = new $.ig.RevealView(selector);
         this._revealView.interactiveFilteringEnabled = true;
 
-        //this event must be set BEFORE the dashboard is set
-        this.assignHandler(this.dataLoading, 'onVisualizationDataLoading', (e: any) => e);
-
         this.updateOptions(options);
         this.initializeEvents();
+
+        // Set up initial dynamic event handlers using the actual changed properties
+        if (changedProperties) {
+            this.updateIndividualCallbacks(changedProperties);
+        }
 
         //todo: there is a bug in the Reveal SDK where the saved event args.isNew is always false if the dashboard property is set to null or undefined
         if (dashboard) {
@@ -225,10 +239,7 @@ export class RvRevealView extends LitElement {
     }
 
     private updateOptions(options: RevealViewOptions | undefined) {
-
-        if (!this._revealView) {
-            return;
-        }
+        if (!this._revealView) return;
 
         this._mergedOptions = merge({}, RevealViewDefaults, options);
 
@@ -313,36 +324,101 @@ export class RvRevealView extends LitElement {
     }
 
     private initializeEvents() {
+        this.updateMenuOpeningHandler();
+        this.updateDataSourcesRequestedHandler();
+        this.updateDashboardLinkRequestedHandler();
+    }
 
-        this.assignHandler(this.dataPointClicked, 'onVisualizationDataPointClicked', (visualization: any, cell: any, row: any) => {
-            return { visualization: visualization, cell: cell, row: row };
-        });
-        this.assignHandler(this.dataSourceDialogOpening, 'onDataSourceSelectionDialogShowing', (e: any) => e);
-        this.assignHandler(this.fieldsInitializing, 'onFieldsInitializing', (e: any) => e);
-        this.assignHandler(this.tooltipShowing, 'onTooltipShowing', (e: any) => e);
-        this.assignHandler(this.editModeEntered, 'onEditModeEntered', (e: any) => e);
-        this.assignHandler(this.editModeExited, 'onEditModeExited', (e: any) => e);
-        this.assignHandler(this.editorClosed, 'onVisualizationEditorClosed', (e: any) => e);
-        this.assignHandler(this.editorClosing, 'onVisualizationEditorClosing', (e: any) => e);
-        this.assignHandler(this.editorOpened, 'onVisualizationEditorOpened', (e: any) => e);
-        this.assignHandler(this.editorOpening, 'onVisualizationEditorOpening', (e: any) => e);
-        this.assignHandler(this.imageExported, 'onImageExported', (e: any) => {
-            return { image: e };
-        });
-        this.assignHandler(this.linkSelectionDialogOpening, 'onDashboardSelectorRequested', (e: any) => e);
-        this.assignHandler(this.saving, 'onSave', (rv: any, e: any) => e);
+    private updateIndividualCallbacks(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
 
-        if (this.seriesColorRequested !== undefined) {
-            this._revealView.onVisualizationSeriesColorAssigning = (visualization: any, defaultColor: any, fieldName: any, categoryName: any) => {
-                return this.seriesColorRequested?.({
-                    visualization: visualization,
-                    defaultColor: defaultColor,
-                    fieldName: fieldName,
-                    categoryName: categoryName
-                });
+        if (changedProperties.has('dataLoading')) {
+            //this event must be set BEFORE the dashboard is set
+            this.assignHandler(this.dataLoading, 'onVisualizationDataLoading', (e: any) => e);
+        }
+
+        if (changedProperties.has('dataPointClicked')) {
+            this.assignHandler(this.dataPointClicked, 'onVisualizationDataPointClicked', (visualization: any, cell: any, row: any) => {
+                return { visualization: visualization, cell: cell, row: row };
+            });
+        }
+
+        if (changedProperties.has('dataSourceDialogOpening')) {
+            this.assignHandler(this.dataSourceDialogOpening, 'onDataSourceSelectionDialogShowing', (e: any) => e);
+        }
+
+        if (changedProperties.has('fieldsInitializing')) {
+            this.assignHandler(this.fieldsInitializing, 'onFieldsInitializing', (e: any) => e);
+        }
+
+        if (changedProperties.has('tooltipShowing')) {
+            this.assignHandler(this.tooltipShowing, 'onTooltipShowing', (e: any) => e);
+        }
+
+        if (changedProperties.has('editModeEntered')) {
+            this.assignHandler(this.editModeEntered, 'onEditModeEntered', (e: any) => e);
+        }
+
+        if (changedProperties.has('editModeExited')) {
+            this.assignHandler(this.editModeExited, 'onEditModeExited', (e: any) => e);
+        }
+
+        if (changedProperties.has('editorClosed')) {
+            this.assignHandler(this.editorClosed, 'onVisualizationEditorClosed', (e: any) => e);
+        }
+
+        if (changedProperties.has('editorClosing')) {
+            this.assignHandler(this.editorClosing, 'onVisualizationEditorClosing', (e: any) => e);
+        }
+
+        if (changedProperties.has('editorOpened')) {
+            this.assignHandler(this.editorOpened, 'onVisualizationEditorOpened', (e: any) => e);
+        }
+
+        if (changedProperties.has('editorOpening')) {
+            this.assignHandler(this.editorOpening, 'onVisualizationEditorOpening', (e: any) => e);
+        }
+
+        if (changedProperties.has('imageExported')) {
+            this.assignHandler(this.imageExported, 'onImageExported', (e: any) => {
+                return { image: e };
+            });
+        }
+
+        if (changedProperties.has('linkSelectionDialogOpening')) {
+            this.assignHandler(this.linkSelectionDialogOpening, 'onDashboardSelectorRequested', (e: any) => e);
+        }
+
+        if (changedProperties.has('saving')) {
+            this.assignHandler(this.saving, 'onSave', (rv: any, e: any) => e);
+        }
+
+        if (changedProperties.has('seriesColorRequested')) {
+            if (this.seriesColorRequested !== undefined) {
+                this._revealView.onVisualizationSeriesColorAssigning = (visualization: any, defaultColor: any, fieldName: any, categoryName: any) => {
+                    return this.seriesColorRequested?.({
+                        visualization: visualization,
+                        defaultColor: defaultColor,
+                        fieldName: fieldName,
+                        categoryName: categoryName
+                    });
+                }
+            } else {
+                this._revealView.onVisualizationSeriesColorAssigning = undefined;
             }
         }
 
+        if (changedProperties.has('urlLinkRequested')) {
+            if (this.urlLinkRequested !== undefined) {
+                this._revealView.onUrlLinkRequested = (args: any) => {
+                    return this.urlLinkRequested?.(args);
+                }
+            } else {
+                this._revealView.onUrlLinkRequested = undefined;
+            }
+        }
+    }
+
+    private updateMenuOpeningHandler(): void {
         this._revealView.onMenuOpening = (viz: any, e: any) => {
             const createMenuItems = (items: MenuItem[], clickCallback: (item: any) => void) => {
                 items.forEach(item => {
@@ -365,7 +441,9 @@ export class RvRevealView extends LitElement {
                 this.menuOpening({ cancel: e.cancel, isInEditMode: e.isInEditMode, menuLocation: e.menuLocation, menuItems: e.menuItems, visualization: viz });
             }
         };
+    }
 
+    private updateDataSourcesRequestedHandler(): void {
         this._revealView.onDataSourcesRequested = (onComplete: any, trigger: any) => {
             //get the data source from the options first
             const { dataSources, dataSourceItems } = getRVDataSources(this._mergedOptions.dataSources);
@@ -377,9 +455,11 @@ export class RvRevealView extends LitElement {
             }
             onComplete(new $.ig.RevealDataSources(dataSources, dataSourceItems, this._mergedOptions.dataSourceDialog!.showExistingDataSources));
         };
+    }
 
+    private updateDashboardLinkRequestedHandler(): void {
         this._revealView.onLinkedDashboardProviderAsync = (dashboardId: string, title: string) => {
-            
+
             if (this.dashboardLinkRequested !== undefined) {
                 const result = this.dashboardLinkRequested({ dashboardId: dashboardId, title: title });
 
@@ -403,12 +483,16 @@ export class RvRevealView extends LitElement {
     }
 
     private assignHandler(eventProperty: Function | undefined, eventListenerName: string, handler: Function) {
+        if (!this._revealView) return;
+
         if (eventProperty !== undefined) {
             this._revealView[eventListenerName] = (...args: any[]) => {
                 if (eventProperty) {
                     eventProperty(handler(...args));
                 }
             };
+        } else {
+            this._revealView[eventListenerName] = undefined;
         }
     }
 
@@ -551,6 +635,8 @@ export class RvRevealView extends LitElement {
     }
 
     protected override updated(changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+        if (!this._revealView) return;
+
         const dashboardChanged = changedProperties.has("dashboard") && this.dashboard !== undefined;
         const optionsChanged = changedProperties.has("options") && this.options !== undefined;
 
@@ -561,6 +647,8 @@ export class RvRevealView extends LitElement {
         if (optionsChanged) {
             this.updateOptions(this.options);
         }
+
+        this.updateIndividualCallbacks(changedProperties);
     }
 
     protected override render(): unknown {

@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, defineRevealSdkWrappers, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, RevealViewOptions, RvRevealView, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs } from 'reveal-sdk-wrappers';
+import { DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, defineRevealSdkWrappers, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, RevealViewOptions, RvRevealView, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, UrlLinkRequestedArgs } from 'reveal-sdk-wrappers';
 defineRevealSdkWrappers(RvRevealView);
 
 @Component({
@@ -30,6 +30,7 @@ defineRevealSdkWrappers(RvRevealView);
       [saving]='saving'
       [seriesColorRequested]='seriesColorRequested'
       [tooltipShowing]='tooltipShowing'
+      [urlLinkRequested]='urlLinkRequested'
   ></rv-reveal-view>`,
   styleUrl: './reveal-view.component.scss',
 })
@@ -57,6 +58,7 @@ export class RevealViewComponent {
   @Input() saving?: (args: SavingArgs) => void;
   @Input() seriesColorRequested?: (args: SeriesColorRequestedArgs) => string;
   @Input() tooltipShowing?: (args: TooltipShowingArgs) => void;
+  @Input() urlLinkRequested?: (args: UrlLinkRequestedArgs) => string;
 
   public enterEditMode(): void {
     this.revealView.nativeElement.enterEditMode();

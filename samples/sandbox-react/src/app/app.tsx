@@ -14,7 +14,7 @@ export function App() {
   const [dashboard, setDashboard] = useState<string>("Marketing");
   const options: RevealViewOptions = {
     startInEditMode: false,
-    canSave: false,
+    //canSave: false,
     dataSources: [
       { type: "REST", title: "Sales by Category", subtitle: "Excel2Json", url: "https://excel2json.io/api/share/6e0f06b3-72d3-4fec-7984-08da43f56bb9" },
       { type: "LocalFile", title: "Local File", subtitle: "Upload a local file", fileName: "LocalFile", format: "Excel" }
@@ -82,9 +82,9 @@ export function App() {
       <RvRevealView
         ref={rvRef}
         dashboard={dashboard}
-        options={options}
-        
+        options={options}        
         dashboardLinkRequested={handleDashboardLinkRequested}
+        linkSelectionDialogOpening={(args) => { args.callback("Sales") }}
       ></RvRevealView>
     </div>
   );
