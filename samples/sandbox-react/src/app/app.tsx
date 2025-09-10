@@ -55,7 +55,8 @@ export function App() {
 
   const handleDashboardLinkRequested = (args: DashboardLinkRequestedArgs) => {
     //return args.dashboardId;
-    
+    console.log("Dashboard link requested: " + args.dashboardId);
+
     return $.ig.RVDashboard.loadDashboard(args.dashboardId);
     //return $.ig.RVDashboard.loadDashboard(args.dashboardId);
     //const dashboard = DashboardService.getDashboardById(args.dashboardId);
@@ -72,13 +73,17 @@ export function App() {
   return (
     <div style={{ height: '100%' }}>
       <button onClick={onClick}>Switch Dashboard</button>
-      <RvVisualizationViewer ref={rvViewerRef} dashboard={dashboard} visualization={0} style={{height: 400}}
+      {/* <RvVisualizationViewer ref={rvViewerRef} dashboard={dashboard} visualization={0} style={{ height: 400 }}
         options={{
           menu: {
             copy: false,
           }
-        }}></RvVisualizationViewer>
-      <RvRevealView ref={rvRef} dashboard={dashboard} options={options} menuOpening={menuOpening}
+        }}></RvVisualizationViewer> */}
+      <RvRevealView
+        ref={rvRef}
+        dashboard={dashboard}
+        options={options}
+        
         dashboardLinkRequested={handleDashboardLinkRequested}
       ></RvRevealView>
     </div>

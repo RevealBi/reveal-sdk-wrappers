@@ -378,26 +378,28 @@ export class RvRevealView extends LitElement {
             onComplete(new $.ig.RevealDataSources(dataSources, dataSourceItems, this._mergedOptions.dataSourceDialog!.showExistingDataSources));
         };
 
-        // Only hook into onLinkedDashboardProviderAsync if there's a handler
-        if (this.dashboardLinkRequested !== undefined) {
-            console.log('Dashboard link request handler assigned.');
-            this._revealView.onLinkedDashboardProviderAsync = (dashboardId: string, title: string) => {
-                const result = this.dashboardLinkRequested!({ dashboardId: dashboardId, title: title });
-                
-                // Handle string return type (existing behavior)
-                if (typeof result === 'string') {                    
+        this._revealView.onLinkedDashboardProviderAsync = (dashboardId: string, title: string) => {
+            
+            if (this.dashboardLinkRequested !== undefined) {
+                const result = this.dashboardLinkRequested({ dashboardId: dashboardId, title: title });
+
+                // Handle string return type
+                if (typeof result === 'string') {
                     return $.ig.RVDashboard.loadDashboard(result);
                 }
-                
+
                 // Handle Promise<any> return type
                 if (result && typeof result.then === 'function') {
                     return result;
                 }
-                
+
                 // Use DashboardLoader for consistent handling of RDashDocument and other types
                 return DashboardLoader.load(result);
-            };
-        }
+            }
+
+            // Default behavior: load dashboard by ID
+            return $.ig.RVDashboard.loadDashboard(dashboardId);
+        };
     }
 
     private assignHandler(eventProperty: Function | undefined, eventListenerName: string, handler: Function) {
