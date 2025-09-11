@@ -34,20 +34,6 @@ export class RvRevealView extends LitElement {
     @property({ type: Object, attribute: false }) options: RevealViewOptions = {};
 
     /**
-     * Gets the dashboard date filter.
-     */
-    get dateFilter(): any {
-        return this._revealView?.dashboard?.dateFilter;
-    }
-
-    /**
-     * Gets the dashboard filters.
-     */
-    get filters(): DashboardFilters {
-        return this._revealView?.dashboard?.filters;
-    }
-
-    /**
      * Callback triggered when data is loading.
      */
     @property({ type: Function, attribute: false }) dataLoading?: (args: DataLoadingArgs) => void;
@@ -204,8 +190,8 @@ export class RvRevealView extends LitElement {
         }
     }
 
-    protected override firstUpdated(changedProperties: Map<PropertyKey, unknown>): void {
-        this.init(this.dashboard, this.options, changedProperties);
+    protected override async firstUpdated(changedProperties: Map<PropertyKey, unknown>): Promise<void> {
+        await this.init(this.dashboard, this.options, changedProperties);
     }
 
     private async init(dashboard?: string | unknown, options?: RevealViewOptions, changedProperties?: Map<PropertyKey, unknown>): Promise<void> {
@@ -588,6 +574,14 @@ export class RvRevealView extends LitElement {
      */
     exportToPowerPoint(): void {
         this._revealView._dashboardView.exportToFormat("pptx");
+    }
+
+    /**
+     * Gets the current dashboard filters in the RevealView component.
+     * @returns {DashboardFilters | undefined} The current dashboard filters, or undefined if the RevealView component is not initialized.
+     */
+    getFilters(): DashboardFilters | undefined {
+        return this._revealView ? this._revealView.dashboard.filters : undefined;
     }
 
     /**

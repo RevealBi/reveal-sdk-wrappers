@@ -85,6 +85,7 @@ export function App() {
         options={options}        
         dashboardLinkRequested={handleDashboardLinkRequested}
         linkSelectionDialogOpening={(args) => { args.callback("Sales") }}
+        initialized={() => console.log(rvRef.current?.getFilters())}
       ></RvRevealView>
     </div>
   );

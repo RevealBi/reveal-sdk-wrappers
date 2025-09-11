@@ -42,8 +42,20 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      // External packages that should not be bundled into your library.
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: (id) => {
+        // More aggressive externalization
+        return id === 'react' || 
+               id === 'react-dom' || 
+               id === 'react/jsx-runtime' ||
+               id.startsWith('react/') ||
+               id.startsWith('react-dom/');
+      },
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM'
+        }
+      }
     },
   },
 });

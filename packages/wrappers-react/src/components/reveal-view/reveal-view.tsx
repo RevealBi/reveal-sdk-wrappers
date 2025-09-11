@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useRef, useEffect, forwardRef, useImperativeHandle, useLayoutEffect } from 'react';
 import { defineRevealSdkWrappers, RvRevealView as WebComponent, RevealViewOptions, DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, UrlLinkRequestedArgs, DashboardFilters } from 'reveal-sdk-wrappers';
 
 // Ensure the web component is defined
@@ -40,14 +40,11 @@ export interface RvRevealViewRef {
   exportToImage(showDialog?: boolean): void | Promise<Element | null>;
   exportToPdf(): void;
   exportToPowerPoint(): void;
+  getFilters(): DashboardFilters | undefined;
   getRVDashboard(): any;
   paste(target?: WebComponent): void;
   refreshData(input?: string | number): void;
   refreshTheme(): void;
-
-  // Getters
-  readonly dateFilter: any;
-  readonly filters: DashboardFilters | undefined;
 }
 
 // Declare the custom element for TypeScript
@@ -90,12 +87,20 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
   
   const elementRef = useRef<WebComponent>(null);
 
-  // Update properties when they change
+  // CRITICAL: Use useLayoutEffect for initialized callback to fix timing issue
+  // This runs synchronously BEFORE the web component initializes
+  useLayoutEffect(() => {
+    const element = elementRef.current;
+    if (element && initialized !== undefined) {
+      element.initialized = initialized;
+    }
+  }, [initialized]);
+
+  // Effect for core properties (dashboard, options) - these change frequently
   useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
 
-    // Set all properties on the web component
     if (dashboard !== undefined) {
       element.dashboard = dashboard;
     }
@@ -103,8 +108,13 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
     if (options !== undefined) {
       element.options = options;
     }
+  }, [dashboard, options]);
 
-    // Set callback properties
+  // Effect for callback properties - these rarely change
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
+
     if (dataLoading !== undefined) {
       element.dataLoading = dataLoading;
     }
@@ -157,10 +167,6 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
       element.imageExported = imageExported;
     }
 
-    if (initialized !== undefined) {
-      element.initialized = initialized;
-    }
-
     if (linkSelectionDialogOpening !== undefined) {
       element.linkSelectionDialogOpening = linkSelectionDialogOpening;
     }
@@ -185,8 +191,6 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
       element.urlLinkRequested = urlLinkRequested;
     }
   }, [
-    dashboard,
-    options,
     dataLoading,
     dataPointClicked,
     dataSourceDialogOpening,
@@ -200,7 +204,6 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
     editorOpening,
     fieldsInitializing,
     imageExported,
-    initialized,
     linkSelectionDialogOpening,
     menuOpening,
     saving,
@@ -248,6 +251,10 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
       elementRef.current?.exportToPowerPoint();
     },
 
+    getFilters: () => {
+      return elementRef.current?.getFilters();
+    },
+
     getRVDashboard: () => {
       return elementRef.current?.getRVDashboard();
     },
@@ -262,15 +269,6 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
 
     refreshTheme: () => {
       elementRef.current?.refreshTheme();
-    },
-
-    // Getters
-    get dateFilter() {
-      return elementRef.current?.dateFilter;
-    },
-
-    get filters() {
-      return elementRef.current?.filters;
     }
   }), []);
 

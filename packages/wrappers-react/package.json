@@ -1,6 +1,6 @@
 {
   "name": "reveal-sdk-wrappers-react",
-  "version": "0.1.21",
+  "version": "0.2.0",
   "type": "module",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -9,10 +9,9 @@
       "import": "./index.js"
     }
   },
-  "dependencies": {
-    "@lit/react": "^1.0.6"
-  },
   "peerDependencies": {
-    "reveal-sdk-wrappers": ">=0.1.21"
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+    "reveal-sdk-wrappers": ">=0.2.0"
   }
 }
