@@ -21,6 +21,7 @@ export function App() {
     ],
     header: {
       showTitle: false,
+      showDescription: true,
       menu: {
         exportToPowerPoint: false,
         items: [

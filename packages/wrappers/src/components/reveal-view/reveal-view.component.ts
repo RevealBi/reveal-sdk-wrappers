@@ -258,6 +258,7 @@ export class RvRevealView extends LitElement {
         } else if (this._mergedOptions.header) {
             this._revealView.canAddVisualization = this._mergedOptions.header.canAddVisualization;
             this._revealView.showTitle = this._mergedOptions.header.showTitle;
+            this._revealView.showDescription = this._mergedOptions.header.showDescription;
 
             if (typeof this._mergedOptions.header.menu === 'boolean') {
                 this._revealView.showMenu = this._mergedOptions.header.menu;

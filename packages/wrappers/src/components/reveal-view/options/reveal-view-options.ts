@@ -132,6 +132,11 @@ export interface HeaderOptions {
      */
     showTitle?: boolean;
 
+    /**
+     * Gets or sets if the description is shown in the header.
+     */
+    showDescription?: boolean;
+
     menu?: boolean | {
         /**
          * Gets or sets if the menu item "Export to Image" is shown.

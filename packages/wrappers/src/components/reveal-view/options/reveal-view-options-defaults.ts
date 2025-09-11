@@ -12,6 +12,7 @@ export const RevealViewDefaults: RevealViewOptions = Object.freeze({
     header: {
         canAddVisualization: true,
         showTitle: true,
+        showDescription: true,
         menu: {
             exportToExcel: true,
             exportToImage: true,
