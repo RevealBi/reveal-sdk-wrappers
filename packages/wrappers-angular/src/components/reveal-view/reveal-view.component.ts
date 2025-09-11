@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardFilters, DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, defineRevealSdkWrappers, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, RevealViewOptions, RvRevealView, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, UrlLinkRequestedArgs } from 'reveal-sdk-wrappers';
+import { DashboardFilters, DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, defineRevealSdkWrappers, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, RevealViewOptions, RvDashboardChangedArgs, RvRevealView, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, UrlLinkRequestedArgs } from 'reveal-sdk-wrappers';
 defineRevealSdkWrappers(RvRevealView);
 
 @Component({
@@ -16,6 +16,7 @@ defineRevealSdkWrappers(RvRevealView);
       [dataSourceDialogOpening]='dataSourceDialogOpening'
       [dataSourcesRequested]='dataSourcesRequested'
       [dashboardLinkRequested]='dashboardLinkRequested'
+      [rvDashboardChanged]='rvDashboardChanged'
       [editModeEntered]='editModeEntered'
       [editModeExited]='editModeExited'
       [editorClosed]='editorClosed'
@@ -44,6 +45,7 @@ export class RevealViewComponent {
   @Input() dataSourceDialogOpening?: (args: DataSourceDialogOpeningArgs) => void;
   @Input() dataSourcesRequested?: (args: DataSourcesRequestedArgs) => any;
   @Input() dashboardLinkRequested?: (args: DashboardLinkRequestedArgs) => string | Promise<any> | any;
+  @Input() rvDashboardChanged?: (args: RvDashboardChangedArgs) => void;
   @Input() editModeEntered?: (args: EditModeEnteredArgs) => void;
   @Input() editModeExited?: (args: EditModeExitedArgs) => void;
   @Input() editorClosed?: (args: EditorClosedArgs) => void;

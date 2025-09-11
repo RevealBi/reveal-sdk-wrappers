@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, forwardRef, useImperativeHandle, useLayoutEffect } from 'react';
-import { defineRevealSdkWrappers, RvRevealView as WebComponent, RevealViewOptions, DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, UrlLinkRequestedArgs, DashboardFilters } from 'reveal-sdk-wrappers';
+import { defineRevealSdkWrappers, RvRevealView as WebComponent, RevealViewOptions, DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, RvDashboardChangedArgs, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, UrlLinkRequestedArgs, DashboardFilters } from 'reveal-sdk-wrappers';
 
 // Ensure the web component is defined
 defineRevealSdkWrappers(WebComponent);
@@ -12,6 +12,7 @@ export interface RvRevealViewProps extends React.HTMLAttributes<HTMLElement> {
   dataSourceDialogOpening?: (args: DataSourceDialogOpeningArgs) => void;
   dataSourcesRequested?: (args: DataSourcesRequestedArgs) => any;
   dashboardLinkRequested?: (args: DashboardLinkRequestedArgs) => string | Promise<any> | any;
+  rvDashboardChanged?: (args: RvDashboardChangedArgs) => void;
   editModeEntered?: (args: EditModeEnteredArgs) => void;
   editModeExited?: (args: EditModeExitedArgs) => void;
   editorClosed?: (args: EditorClosedArgs) => void;
@@ -67,6 +68,7 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
     dataSourceDialogOpening,
     dataSourcesRequested,
     dashboardLinkRequested,
+    rvDashboardChanged,
     editModeEntered,
     editModeExited,
     editorClosed,
@@ -135,6 +137,10 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
       element.dashboardLinkRequested = dashboardLinkRequested;
     }
 
+    if (rvDashboardChanged !== undefined) {
+      element.rvDashboardChanged = rvDashboardChanged;
+    }
+
     if (editModeEntered !== undefined) {
       element.editModeEntered = editModeEntered;
     }
@@ -196,6 +202,7 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
     dataSourceDialogOpening,
     dataSourcesRequested,
     dashboardLinkRequested,
+    rvDashboardChanged,
     editModeEntered,
     editModeExited,
     editorClosed,

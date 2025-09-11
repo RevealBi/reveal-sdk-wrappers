@@ -129,6 +129,6 @@ export interface UrlLinkRequestedArgs {
 }
 
 export interface RvDashboardChangedArgs {
-    readonly oldDashboard: any;
-    readonly newDashboard: any;
+    readonly newValue: any;
+    readonly oldValue: any;    
 }
