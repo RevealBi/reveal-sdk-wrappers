@@ -127,6 +127,11 @@ export interface HeaderOptions {
      */
     canAddVisualization?: boolean;
 
+    /**
+     * Gets or sets if the title is shown in the header.
+     */
+    showTitle?: boolean;
+
     menu?: boolean | {
         /**
          * Gets or sets if the menu item "Export to Image" is shown.

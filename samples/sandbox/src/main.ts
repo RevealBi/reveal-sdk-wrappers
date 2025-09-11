@@ -1,4 +1,4 @@
-import { defineRevealSdkWrappers, RevealViewOptions, RvRevealView, UrlLinkRequestedArgs } from "reveal-sdk-wrappers";
+import { RvDashboardChangedArgs, defineRevealSdkWrappers, RevealViewOptions, RvRevealView, UrlLinkRequestedArgs } from "reveal-sdk-wrappers";
 defineRevealSdkWrappers();
 
 declare const $: any;
@@ -9,6 +9,7 @@ const options: RevealViewOptions = {
     //canSaveAs: false,
     //canEdit: false,
     header: {
+        showTitle: false,
         menu: {
             //refresh: false,
             //saveAs: false,
@@ -23,6 +24,10 @@ revealView.dashboard = "Marketing";
 revealView.urlLinkRequested = (args: UrlLinkRequestedArgs) => {
     console.log("urlLinkRequested", args);
     return args.url;
+}
+
+revealView.rvDashboardChanged = (args: RvDashboardChangedArgs) => {
+    console.log("dashboardChanged", args);
 }
 
 // revealView.linkSelectionDialogOpening = (evt: any) => {

@@ -20,6 +20,7 @@ export function App() {
       { type: "LocalFile", title: "Local File", subtitle: "Upload a local file", fileName: "LocalFile", format: "Excel" }
     ],
     header: {
+      showTitle: false,
       menu: {
         exportToPowerPoint: false,
         items: [

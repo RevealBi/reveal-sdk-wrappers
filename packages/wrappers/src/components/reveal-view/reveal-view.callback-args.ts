@@ -127,3 +127,8 @@ export interface UrlLinkRequestedArgs {
     readonly url: string;
     readonly visualization: any;
 }
+
+export interface RvDashboardChangedArgs {
+    readonly oldDashboard: any;
+    readonly newDashboard: any;
+}

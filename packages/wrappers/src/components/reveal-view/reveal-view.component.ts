@@ -1,5 +1,5 @@
 import { property } from "lit/decorators.js";
-import { DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, UrlLinkRequestedArgs } from "./reveal-view.callback-args";
+import { RvDashboardChangedArgs, DashboardLinkRequestedArgs, DataLoadingArgs, DataPointClickedArgs, DataSourceDialogOpeningArgs, DataSourcesRequestedArgs, EditModeEnteredArgs, EditModeExitedArgs, EditorClosedArgs, EditorClosingArgs, EditorOpenedArgs, EditorOpeningArgs, FieldsInitializingArgs, ImageExportedArgs, LinkSelectionDialogOpeningArgs, MenuOpeningArgs, SavingArgs, SeriesColorRequestedArgs, TooltipShowingArgs, UrlLinkRequestedArgs } from "./reveal-view.callback-args";
 import styles from "./reveal-view.styles";
 import { LitElement, PropertyValueMap, html } from "lit";
 import { MenuItem } from "../common";
@@ -69,6 +69,7 @@ export class RvRevealView extends LitElement {
     /**
      * Callback triggered when a dashboard link is requested.
      * Can return a string (dashboard ID/title), Promise<any> (resolving to RVDashboard), or RDashDocument.
+     * 
      * @example
      * ```typescript
      * revealView.dashboardLinkRequested = (args: DashboardLinkRequestedArgs) => {
@@ -79,6 +80,21 @@ export class RvRevealView extends LitElement {
      * ```
      */
     @property({ type: Function, attribute: false }) dashboardLinkRequested?: (args: DashboardLinkRequestedArgs) => string | Promise<any> | any;
+
+
+    /**
+     * Callback triggered when the underlying RevealView dashboard instance changes.
+     * This does not fire when the web component's `dashboard` property changes,
+     * but only when the wrapped jQuery RevealView's dashboard instance changes.
+     * 
+     * @example
+     * ```typescript
+     * revealView.rvDashboardChanged = (args: RvDashboardChangedArgs) => {
+     *   console.log("Underlying RevealView dashboard changed", args);
+     * }
+     * ```
+     */
+    @property({ type: Function, attribute: false }) rvDashboardChanged?: (args: RvDashboardChangedArgs) => void;
 
     /**
      * Callback triggered when edit mode is entered.
@@ -241,6 +257,7 @@ export class RvRevealView extends LitElement {
             this._revealView.showHeader = this._mergedOptions.header;
         } else if (this._mergedOptions.header) {
             this._revealView.canAddVisualization = this._mergedOptions.header.canAddVisualization;
+            this._revealView.showTitle = this._mergedOptions.header.showTitle;
 
             if (typeof this._mergedOptions.header.menu === 'boolean') {
                 this._revealView.showMenu = this._mergedOptions.header.menu;
@@ -330,6 +347,10 @@ export class RvRevealView extends LitElement {
 
         if (changedProperties.has('dataSourceDialogOpening')) {
             this.assignHandler(this.dataSourceDialogOpening, 'onDataSourceSelectionDialogShowing', (e: any) => e);
+        }
+
+        if (changedProperties.has('rvDashboardChanged')) {
+            this.assignHandler(this.rvDashboardChanged, 'onDashboardChanged', (e: any) => e);
         }
 
         if (changedProperties.has('fieldsInitializing')) {
