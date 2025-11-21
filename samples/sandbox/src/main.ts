@@ -8,6 +8,7 @@ const options: RevealViewOptions = {
     //canSave: false,
     //canSaveAs: false,
     //canEdit: false,
+    //canCancel: false,
     header: {
         showTitle: false,
         menu: {

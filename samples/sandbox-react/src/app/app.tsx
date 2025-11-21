@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import styles from './app.module.scss';
 import { RvRevealView, RvRevealViewRef, RvVisualizationViewer, RvVisualizationViewerRef } from 'reveal-sdk-wrappers-react';
-import { DashboardLinkRequestedArgs, MenuOpeningArgs, RevealViewOptions, SeriesColorRequestedArgs } from 'reveal-sdk-wrappers';
+import { DashboardLinkRequestedArgs, MenuOpeningArgs, RevealViewOptions, RvDashboardChangedArgs, SeriesColorRequestedArgs } from 'reveal-sdk-wrappers';
 
 declare const $: any;
 $.ig.RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/reveal-api/");
@@ -53,6 +53,16 @@ export function App() {
     else {
       $.ig.RevealSdkSettings.theme = new $.ig.MountainDarkTheme();
     }
+
+    // const filters = rvRef.current?.getFilters();
+    // if (!filters) {
+    //   return;
+    // }
+
+    // const dateFilter: any = filters.getByTitle("Date Filter");
+    // dateFilter.rule = new $.ig.RVDateRule($.ig.RVPeriodRelation.Last, 2, $.ig.RVPeriodType.Day);
+    //or
+    //dateFilter.range = new $.ig.RVDateRange(new Date(2023, 0, 1), new Date(2023, 11, 31));
   }
 
   const handleDashboardLinkRequested = (args: DashboardLinkRequestedArgs) => {
@@ -84,7 +94,7 @@ export function App() {
       <RvRevealView
         ref={rvRef}
         dashboard={dashboard}
-        options={options}        
+        options={options}
         dashboardLinkRequested={handleDashboardLinkRequested}
         linkSelectionDialogOpening={(args) => { args.callback("Sales") }}
         initialized={() => console.log(rvRef.current?.getFilters())}

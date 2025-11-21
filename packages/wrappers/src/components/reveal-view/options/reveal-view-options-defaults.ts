@@ -4,6 +4,7 @@ import { RevealViewOptions } from "./reveal-view-options";
 export const RevealViewDefaults: RevealViewOptions = Object.freeze({
     canEdit: true,
     canSave: true,
+    canCancel: true,
     dataSources: [],
     saveOnServer: true,
     startInEditMode: false,

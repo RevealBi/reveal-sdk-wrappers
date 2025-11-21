@@ -246,8 +246,8 @@ export class RvRevealView extends LitElement {
         this._mergedOptions = merge({}, RevealViewDefaults, options);
 
         this._revealView.canEdit = this._mergedOptions.canEdit;
-        this._revealView.canSave = this._mergedOptions.canSave;
         this._revealView.showSave = this._mergedOptions.canSave;
+        this._revealView.showCancel = this._mergedOptions.canCancel;
         this._revealView.serverSideSave = this._mergedOptions.saveOnServer;
         this._revealView.startInEditMode = this._mergedOptions.startInEditMode;
         this._revealView.startWithNewVisualization = this._mergedOptions.startWithNewVisualization;

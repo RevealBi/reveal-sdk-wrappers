@@ -13,6 +13,10 @@ export interface RevealViewOptions {
      */
     canSave?: boolean;
     /**
+     * Gets or sets if the user can cancel changes made during edit mode. 
+     */
+    canCancel?: boolean;
+    /**
      * Gets or sets the data sources that can be used to create dashboards.
      */
     dataSources?: DataSourcesConfig;
