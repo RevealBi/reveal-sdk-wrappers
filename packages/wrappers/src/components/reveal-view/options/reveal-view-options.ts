@@ -1,6 +1,7 @@
 import { MenuItem } from "../../common/interfaces/menu-item";
 import { ChartType } from "../enums/chart-type";
 import { DataSourcesConfig } from "../data-sources";
+import { RVChartType, RVChartTypeItem } from "reveal-sdk";
 
 
 export interface RevealViewOptions {
@@ -57,72 +58,72 @@ export interface DataSourceDialogOptions {
     /**
      * Gets or sets if data sources defined in the dashboard are shown in the data source dialog.
      */
-    showExistingDataSources?: boolean;
+    showExistingDataSources: boolean;
     /**
      * Gets or sets if the search input is shown in the data source dialog.
      */
-    showSearch?: boolean;
+    showSearch: boolean;
 }
 
 
 export interface EditorOptions {
     /**
      * Modifies, filters, or augments the provided list of chart types that appear in the Chart Types selection dialog.
-     * @param {ChartTypeItem[]} chartTypes - The array of default chart type items.
-     * @returns {ChartTypeItem[]} - An array of processed chart type items.
+     * @param {RVChartTypeItem[]} chartTypes - The array of default chart type items.
+     * @returns {RVChartTypeItem[]} - An array of processed chart type items.
      */
-    chartTypes?: (chartTypes: ChartTypeItem[]) => ChartTypeItem[];
+    chartTypes: (chartTypes: RVChartTypeItem[]) => RVChartTypeItem[];
     /**
      * Gets or sets the array of chart types to remove from the default chart types.
      */
-    chartTypesToRemove?: ChartType[];
+    chartTypesToRemove: RVChartType[];
     /**
      * Gets or sets the array of custom chart types to add to the Chart Types selection dialog.
      */
-    chartTypesToAdd?: ChartTypeCustomItem[];
+    chartTypesToAdd: RVChartTypeItem[];
     /**
      * Gets or sets the default chart type to use when creating a new visualization.
      */
-    defaultChartType?: ChartType | string;
+    defaultChartType: RVChartType;
     /**
      * Gets or set if the f(x) option in numeric values sections (like "Values") should be displayed or not.
      */
-    addPostCalculatedFields?: boolean;
+    addPostCalculatedFields: boolean;
     /**
      * Gets or sets if new (calculated) fields can be added to the list of fields.
      */
-    addCalculatedFields?: boolean;
+    addCalculatedFields: boolean;
     /**
      * Gets or sets if the button "Add fields from another data source" should be available or not.
      */
-    dataBlending?: boolean;
+    dataBlending: boolean;
     /**
      * Gets or sets if the edit button for a datasource should be displayed or not.
      */
-    editDataSource?: boolean;
+    editDataSource: boolean;
     /**
      * Gets or sets if the button "Add fields from a Machine Learning model" should be available or not.
      */
-    machineLearning?: boolean;
+    machineLearning: boolean;
 }
 
 export interface FilterOptions {
     /**
      * Gets or sets if the interactive filter behavior is enabled.
      */
-    interactiveFiltering?: boolean;
+    interactiveFiltering: boolean;
     /**
      * Gets or sets if the filters are shown.
      */
-    showFilters?: boolean;
+    showFilters: boolean;
     /**
      * Gets or sets if the user can add a date filter.
      */
-    addDateFilter?: boolean;
+    addDateFilter: boolean;
     /**
      * Gets or sets if the user can add a dashboard filter.
      */
-    addDashboardFilter?: boolean;
+    addDashboardFilter: boolean;
 }
 
 export interface HeaderOptions {
@@ -141,7 +142,7 @@ export interface HeaderOptions {
      */
     showDescription?: boolean;
 
-    menu?: boolean | {
+    menu: boolean | {
         /**
          * Gets or sets if the menu item "Export to Image" is shown.
          */
@@ -183,36 +184,36 @@ export interface VisualizationOptions {
     /**
      * Gets or sets if the user can maximize a visualization.
      */
-    canMaximize?: boolean;
+    canMaximize: boolean;
     /**
      * Gets or sets the grouping separator that appears between the category and field name. The default character used is "/" (forward slash).
      */
-    categoryGroupingSeparator?: string;
+    categoryGroupingSeparator: string;
     /**
      * Gets or sets if crosshairs are shown when hovering over a visualization.
      */
-    crosshairs?: boolean;
+    crosshairs: boolean;
     /**
      * Gets or sets if tooltips are shown when hovering over a visualization.
      */
-    hoverTooltips?: boolean;
+    hoverTooltips: boolean;
     /**
      * Gets or sets if the Change Chart Type dropdown is shown.
      */
-    changeChartType?: boolean;
+    changeChartType: boolean;
     /**
      * Gets or sets if the Statistical Functions dropdown is shown.
      */
-    statisticalFunctions?: boolean;
+    statisticalFunctions: boolean;
     menu?: {
         /**
          * Gets or sets if the "Copy" menu item is shown.
          */
-        copy?: boolean;
+        copy: boolean;
         /**
          * Gets or sets if the "Duplicate" menu item is shown.
          */
-        duplicate?: boolean;
+        duplicate: boolean;
         /**
          * Adds custom menu items to the menu.
          * @example

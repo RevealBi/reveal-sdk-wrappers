@@ -1,11 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useRef, useState } from 'react';
 import styles from './app.module.scss';
-import { RvRevealView, RvRevealViewRef, RvVisualizationViewer, RvVisualizationViewerRef } from 'reveal-sdk-wrappers-react';
+import { RvRevealView, RvRevealViewRef, RvVisualizationViewerRef } from 'reveal-sdk-wrappers-react';
 import { DashboardLinkRequestedArgs, MenuOpeningArgs, RevealViewOptions, RvDashboardChangedArgs, SeriesColorRequestedArgs } from 'reveal-sdk-wrappers';
+import { RevealSdkSettings, RVMenuItem, MountainLightTheme, MountainDarkTheme, RVDashboard } from 'reveal-sdk';
 
-declare const $: any;
-$.ig.RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/reveal-api/");
+RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/reveal-api/");
+
 
 export function App() {
 
@@ -36,7 +37,7 @@ export function App() {
   const menuOpening = (args: MenuOpeningArgs) => {
     if (args.visualization) {
       args.menuItems[6].isHidden = true; //hide the delete button
-      const newDeleteButton = new $.ig.RVMenuItem("Delete", null, () => {
+      const newDeleteButton = new RVMenuItem("Delete", {}, () => {
         //todo: do you custom code here
 
         //perform the built-in delete operation using a backdoor
@@ -47,11 +48,11 @@ export function App() {
   }
 
   const onClick = () => {
-    if ($.ig.RevealSdkSettings.theme.isDark) {
-      $.ig.RevealSdkSettings.theme = new $.ig.MountainLightTheme();
+    if (RevealSdkSettings.theme.isDark) {
+      RevealSdkSettings.theme = new MountainLightTheme();
     }
     else {
-      $.ig.RevealSdkSettings.theme = new $.ig.MountainDarkTheme();
+      RevealSdkSettings.theme = new MountainDarkTheme();
     }
 
     // const filters = rvRef.current?.getFilters();
@@ -69,7 +70,7 @@ export function App() {
     //return args.dashboardId;
     console.log("Dashboard link requested: " + args.dashboardId);
 
-    return $.ig.RVDashboard.loadDashboard(args.dashboardId);
+    return RVDashboard.loadDashboard(args.dashboardId);
     //return $.ig.RVDashboard.loadDashboard(args.dashboardId);
     //const dashboard = DashboardService.getDashboardById(args.dashboardId);
     // if (dashboard) {

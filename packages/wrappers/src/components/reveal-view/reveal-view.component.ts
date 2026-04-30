@@ -6,12 +6,12 @@ import { MenuItem } from "../common";
 import { RevealViewOptions } from "./options/reveal-view-options";
 import { DashboardFilters } from "./interfaces/dashboard-filters";
 import { RevealViewDefaults } from "./options/reveal-view-options-defaults";
-import { ChartType } from "./enums";
 import { DashboardLoader } from "../common/utilties/dashboard-loader";
 import { getRVDataSources } from "../common/utilties/data-source-factory";
 import { merge } from "../common/utilties/merge";
+import { BuiltInLocales } from "reveal-sdk";
+import { RevealView, RVImage, RVMenuItem, RevealDataSources, RVDashboard, RVChartType, RVVisualization, RevealSdkSettings } from "reveal-sdk";
 
-declare let $: any;
 
 /**
  * A web component that wraps the jQuery RevealView component.
@@ -20,7 +20,7 @@ export class RvRevealView extends LitElement {
     static override styles = styles;
     static readonly tagName = 'rv-reveal-view';
 
-    private _revealView: any = null;
+    private _revealView: RevealView | null = null;
     private _mergedOptions: RevealViewOptions = {};
 
     /**
@@ -211,13 +211,15 @@ export class RvRevealView extends LitElement {
     }
 
     private async init(dashboard?: string | unknown, options?: RevealViewOptions, changedProperties?: Map<PropertyKey, unknown>): Promise<void> {
-        const rvDashboard = await this.loadRVDashboard(dashboard);
+        const rvDashboard = await this.loadRVDashboard(dashboard) as RVDashboard;
 
-        const selector = this.renderRoot.querySelector('#rv-viewer');
-        this._revealView = new $.ig.RevealView(selector);
+        const viewerElement = this.renderRoot.querySelector('#rv-viewer') as HTMLElement;
+        if (!viewerElement) {
+            throw new Error('RevealView container element #rv-viewer not found');
+        }
+        this._revealView = new RevealView(viewerElement);
         this._revealView.interactiveFilteringEnabled = true;
 
-        this.updateOptions(options);
         this.initializeEvents();
 
         // Set up initial dynamic event handlers using the actual changed properties
@@ -229,6 +231,7 @@ export class RvRevealView extends LitElement {
         if (dashboard) {
             this._revealView.dashboard = rvDashboard;
         }
+       this.updateOptions(options);
 
         // After the dashboard has been initialized and set, invoke the onInitialized event if it is defined.
         if (this.initialized) {
@@ -241,34 +244,35 @@ export class RvRevealView extends LitElement {
     }
 
     private updateOptions(options: RevealViewOptions | undefined) {
-        if (!this._revealView) return;
+        if (!this._revealView || !this._revealView.dashboard) return;
 
-        this._mergedOptions = merge({}, RevealViewDefaults, options);
+        this._mergedOptions = merge({}, RevealViewDefaults, options) as RevealViewOptions;
 
-        this._revealView.canEdit = this._mergedOptions.canEdit;
-        this._revealView.showSave = this._mergedOptions.canSave;
-        this._revealView.showCancel = this._mergedOptions.canCancel;
-        this._revealView.serverSideSave = this._mergedOptions.saveOnServer;
-        this._revealView.startInEditMode = this._mergedOptions.startInEditMode;
-        this._revealView.startWithNewVisualization = this._mergedOptions.startWithNewVisualization;
+        this._revealView.canEdit = this._mergedOptions.canEdit!;
+        this._revealView.showSave = this._mergedOptions.canSave!;
+        this._revealView.showCancel = this._mergedOptions.canCancel!;
+        this._revealView.serverSideSave = this._mergedOptions.saveOnServer!;
+        this._revealView.startInEditMode = this._mergedOptions.startInEditMode!;
+        this._revealView.startWithNewVisualization = this._mergedOptions.startWithNewVisualization!;
 
         //header
         if (typeof this._mergedOptions.header === 'boolean') {
             this._revealView.showHeader = this._mergedOptions.header;
         } else if (this._mergedOptions.header) {
-            this._revealView.canAddVisualization = this._mergedOptions.header.canAddVisualization;
-            this._revealView.showTitle = this._mergedOptions.header.showTitle;
-            this._revealView.showDescription = this._mergedOptions.header.showDescription;
+            this._revealView.canAddVisualization = this._mergedOptions.header.canAddVisualization!;
+            this._revealView.showTitle = this._mergedOptions.header.showTitle!;
+            this._revealView.showDescription = this._mergedOptions.header.showDescription!;
 
             if (typeof this._mergedOptions.header.menu === 'boolean') {
                 this._revealView.showMenu = this._mergedOptions.header.menu;
             } else if (this._mergedOptions.header.menu) {
-                this._revealView.showExportToExcel = this._mergedOptions.header.menu.exportToExcel;
-                this._revealView.showExportImage = this._mergedOptions.header.menu.exportToImage;
-                this._revealView.showExportToPDF = this._mergedOptions.header.menu.exportToPdf;
-                this._revealView.showExportToPowerPoint = this._mergedOptions.header.menu.exportToPowerPoint;
-                this._revealView.showRefresh = this._mergedOptions.header.menu.refresh;
-                this._revealView.canSaveAs = this._mergedOptions.header.menu.saveAs;
+                const menu = this._mergedOptions.header.menu;
+                this._revealView.showExportToExcel = menu.exportToExcel!;
+                this._revealView.showExportImage = menu.exportToImage!;
+                this._revealView.showExportToPDF = menu.exportToPdf!;
+                this._revealView.showExportToPowerPoint = menu.exportToPowerPoint!;
+                this._revealView.showRefresh = menu.refresh!;
+                this._revealView.canSaveAs = menu.saveAs!;
             }
         }
 
@@ -292,9 +296,7 @@ export class RvRevealView extends LitElement {
         this._revealView.showDataSourceSelectionDialogSearch = this._mergedOptions.dataSourceDialog!.showSearch;
 
         //editor
-        if (this._mergedOptions.editor!.chartTypes) {
-            this._revealView.chartTypes = this._mergedOptions.editor!.chartTypes(this._revealView.chartTypes);
-        }
+        this._revealView.chartTypes = this._mergedOptions.editor!.chartTypes(this._revealView.chartTypes);
 
         if (this._mergedOptions.editor!.chartTypesToRemove) {
             this._revealView.chartTypes = this._revealView.chartTypes.filter((x: any) => !this._mergedOptions.editor!.chartTypesToRemove!.includes(x.chartType));
@@ -305,9 +307,12 @@ export class RvRevealView extends LitElement {
         }
 
         if (typeof this._mergedOptions.editor!.defaultChartType === "string") {
-            const isValidChartType = Object.values(ChartType).includes(this._mergedOptions.editor!.defaultChartType as ChartType);
-            this._revealView.defaultChartType = isValidChartType ? this._mergedOptions.editor!.defaultChartType : undefined;
-            this._revealView.defaultCustomChartType = !isValidChartType ? this._mergedOptions.editor!.defaultChartType : undefined;
+            const isValidChartType = Object.values(RVChartType).includes(this._mergedOptions.editor!.defaultChartType);
+            if(isValidChartType){
+                this._revealView.defaultChartType = this._mergedOptions.editor!.defaultChartType;
+            }else{
+                this._revealView.defaultCustomChartType =  this._mergedOptions.editor!.defaultChartType;
+            }
         }
         else {
             this._revealView.defaultChartType = this._mergedOptions.editor!.defaultChartType;
@@ -321,10 +326,7 @@ export class RvRevealView extends LitElement {
     }
 
     private async updateDashboard(dashboard: string | unknown): Promise<void> {
-        if (!this._revealView) {
-            return;
-        }
-        this._revealView.dashboard = await this.loadRVDashboard(dashboard);
+        this._revealView!.dashboard = await this.loadRVDashboard(dashboard) as RVDashboard;
     }
 
     private initializeEvents() {
@@ -402,36 +404,40 @@ export class RvRevealView extends LitElement {
 
         if (changedProperties.has('seriesColorRequested')) {
             if (this.seriesColorRequested !== undefined) {
-                this._revealView.onVisualizationSeriesColorAssigning = (visualization: any, defaultColor: any, fieldName: any, categoryName: any) => {
-                    return this.seriesColorRequested?.({
-                        visualization: visualization,
-                        defaultColor: defaultColor,
-                        fieldName: fieldName,
-                        categoryName: categoryName
-                    });
+                this._revealView!.onVisualizationSeriesColorAssigning = (visualization: RVVisualization, defaultColor: string, fieldName: string | null, categoryName: string | null) => {
+                    if(fieldName && categoryName){
+                        const customColor = this.seriesColorRequested?.({
+                            visualization: visualization,
+                            defaultColor: defaultColor,
+                            fieldName: fieldName,
+                            categoryName: categoryName
+                        });
+                        // Return custom color if defined, otherwise return the default color
+                        return customColor ?? defaultColor;
+                    }else{
+                        return defaultColor
+                    }
                 }
-            } else {
-                this._revealView.onVisualizationSeriesColorAssigning = undefined;
             }
         }
 
         if (changedProperties.has('urlLinkRequested')) {
             if (this.urlLinkRequested !== undefined) {
-                this._revealView.onUrlLinkRequested = (args: any) => {
-                    return this.urlLinkRequested?.(args);
+                this._revealView!.onUrlLinkRequested = (args: any) => {
+                    const customUrl = this.urlLinkRequested?.(args);
+                    // Return custom URL if defined, otherwise return the original URL or null
+                    return customUrl ?? args.url ?? null;
                 }
-            } else {
-                this._revealView.onUrlLinkRequested = undefined;
             }
         }
     }
 
     private updateMenuOpeningHandler(): void {
-        this._revealView.onMenuOpening = (viz: any, e: any) => {
+        this._revealView!.onMenuOpening = (viz: any, e: any) => {
             const createMenuItems = (items: MenuItem[], clickCallback: (item: any) => void) => {
                 items.forEach(item => {
-                    const icon = item.icon ? new $.ig.RVImage(item.icon) : undefined;
-                    e.menuItems.push(new $.ig.RVMenuItem(item.title, icon, () => clickCallback(item)));
+                    const icon = item.icon ? new RVImage(item.icon, "icon") : undefined;
+                    e.menuItems.push(new RVMenuItem(item.title, icon as RVImage, () => clickCallback(item)));
                 });
             };
 
@@ -452,7 +458,7 @@ export class RvRevealView extends LitElement {
     }
 
     private updateDataSourcesRequestedHandler(): void {
-        this._revealView.onDataSourcesRequested = (onComplete: any, trigger: any) => {
+        this._revealView!.onDataSourcesRequested = (onComplete: any, trigger: any) => {
             //get the data source from the options first
             const { dataSources, dataSourceItems } = getRVDataSources(this._mergedOptions.dataSources);
             //if a custom data source handler is provided, add the data sources from it
@@ -461,19 +467,18 @@ export class RvRevealView extends LitElement {
                 dataSources.push(...result.dataSources);
                 dataSourceItems.push(...result.dataSourceItems);
             }
-            onComplete(new $.ig.RevealDataSources(dataSources, dataSourceItems, this._mergedOptions.dataSourceDialog!.showExistingDataSources));
+            onComplete(new RevealDataSources(dataSources, dataSourceItems, this._mergedOptions.dataSourceDialog!.showExistingDataSources));
         };
     }
 
-    private updateDashboardLinkRequestedHandler(): void {
-        this._revealView.onLinkedDashboardProviderAsync = (dashboardId: string, title: string) => {
-
-            if (this.dashboardLinkRequested !== undefined) {
-                const result = this.dashboardLinkRequested({ dashboardId: dashboardId, title: title });
+   private updateDashboardLinkRequestedHandler(): void {        
+        this._revealView!.onLinkedDashboardProviderAsync = (dashboardId: string, linkTitle: string | null | undefined): Promise<RVDashboard> => {
+            if (this.dashboardLinkRequested !== undefined && linkTitle) {
+                const result = this.dashboardLinkRequested({ dashboardId: dashboardId, title: linkTitle });
 
                 // Handle string return type
                 if (typeof result === 'string') {
-                    return $.ig.RVDashboard.loadDashboard(result);
+                    return RVDashboard.loadDashboard(result);
                 }
 
                 // Handle Promise<any> return type
@@ -486,21 +491,21 @@ export class RvRevealView extends LitElement {
             }
 
             // Default behavior: load dashboard by ID
-            return $.ig.RVDashboard.loadDashboard(dashboardId);
+            return RVDashboard.loadDashboard(dashboardId);
         };
     }
 
-    private assignHandler(eventProperty: Function | undefined, eventListenerName: string, handler: Function) {
+   private assignHandler(eventProperty: Function | undefined, eventListenerName: string, handler: Function) {
         if (!this._revealView) return;
 
         if (eventProperty !== undefined) {
-            this._revealView[eventListenerName] = (...args: any[]) => {
+            (this._revealView as any)[eventListenerName] = (...args: any[]) => {
                 if (eventProperty) {
                     eventProperty(handler(...args));
                 }
             };
         } else {
-            this._revealView[eventListenerName] = undefined;
+            (this._revealView as any)[eventListenerName] = undefined;
         }
     }
 
@@ -513,10 +518,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     addTextBoxVisualization(): void {
-        this._revealView.enterEditMode(); //enter edit mode so that we can save the newly added textbox
-        $.ig.RPEditorTextVisualization.prototype.show(this._revealView._dashboardView, null, this._revealView._dashboardView.theme(), ((e: any) => {
-            this._revealView._dashboardView.addWidget(e)
-        }));
+        this._revealView!.addTextBoxVisualization();
     }
 
     /**
@@ -524,22 +526,17 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     addVisualization(): void {
-        this._revealView._dashboardView._delegate.addWidgetTriggered();
+        this._revealView!.addVisualization();
     }
 
     /**
      * Copies a visualization to the clipboard.
      * If a string ID is provided, the visualization with that ID is copied.
-     * If a number index is provided, the visualization at that index is copied.
-     * @param {string | number} input The ID or index of the visualization to copy
+     * @param {string} input The ID of the visualization to copy
      * @returns {void}
      */
-    copy(input: string | number): void {
-        const widgets = this._revealView._dashboardView.__widgets;
-        const sourceWidget = typeof input === "string" ? widgets.find((widget: any) => widget._widget._id === input) : widgets[input];
-        if (sourceWidget) {
-            this._revealView._dashboardView.widgetCopied(sourceWidget._widget);
-        }
+    copy(input: string): void {
+        this._revealView!.copyWidget(input);
     }
 
     /**
@@ -547,7 +544,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     enterEditMode(): void {
-        this._revealView.enterEditMode();
+        this._revealView!.enterEditMode();
     }
 
     /**
@@ -556,7 +553,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     exitEditMode(applyChanges: boolean): void {
-        this._revealView.exitEditMode(applyChanges);
+        this._revealView!.exitEditMode(applyChanges);
     }
 
     /**
@@ -564,7 +561,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     exportToExcel(): void {
-        this._revealView._dashboardView.exportToExcel();
+        this._revealView!.exportToExcelOrCsv(false);
     }
 
     /**
@@ -572,14 +569,13 @@ export class RvRevealView extends LitElement {
      * @param {boolean} showDialog If true, the export dialog will be shown. If false, the image will be exported directly.
      * @returns {void | Promise<Element | null>} A promise that resolves to the exported image element or null.
      */
-    exportToImage(showDialog: boolean = true): void | Promise<Element | null> {
-
+    exportToImage(showDialog: boolean = true): void | Promise<Element | null> {        
         if (showDialog) {
-            this._revealView._dashboardView.exportImage();
+            this._revealView!.exportImage();
             return;
         }
 
-        return this._revealView.toImage();
+        return this._revealView!.toImage();
     }
 
     /**
@@ -587,7 +583,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     exportToPdf(): void {
-        this._revealView._dashboardView.exportToFormat("pdf");
+        this._revealView!.exportFormat("pdf");
     }
 
     /**
@@ -595,15 +591,19 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     exportToPowerPoint(): void {
-        this._revealView._dashboardView.exportToFormat("pptx");
+        this._revealView!.exportFormat("pptx");
     }
 
     /**
      * Gets the current dashboard filters in the RevealView component.
-     * @returns {DashboardFilters | undefined} The current dashboard filters, or undefined if the RevealView component is not initialized.
+     * @returns {DashboardFilters} The current dashboard filters, or undefined if the RevealView component is not initialized.
      */
-    getFilters(): DashboardFilters | undefined {
-        return this._revealView ? this._revealView.dashboard.filters : undefined;
+    getFilters(): DashboardFilters {
+        if(!this._revealView?.dashboard){
+            throw new Error("Cannot get filters because the RevealView dashboard is not defined.");
+        }
+
+        return this._revealView.dashboard.filters as DashboardFilters;
     }
 
     /**
@@ -621,7 +621,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     paste(target?: RvRevealView): void {
-        target?.paste() ?? this._revealView._dashboardView.pasteWidget();
+        target?.paste() ?? this._revealView!.pasteWidget();
     }
 
     /**
@@ -633,12 +633,17 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     refreshData(input?: string | number): void {
+
+        if(!this._revealView?.dashboard){
+            throw new Error("Cannot refresh the RevealView dashboard is not defined.");
+        }
+
         if (typeof input === "string") {
-            this._revealView._dashboardView.refreshWidget(input);
+            this._revealView!.refreshWidget(input);
         } else if (typeof input === "number") {
-            this._revealView._dashboardView.refreshWidget(this._revealView.dashboard.visualizations[input].id);
+            this._revealView!.refreshWidget(this._revealView!.dashboard.visualizations[input].id);
         } else {
-            this._revealView.refreshDashboardData();
+            this._revealView!.refreshDashboardData();
         }
     }
 

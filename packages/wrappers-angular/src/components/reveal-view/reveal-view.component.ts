@@ -110,7 +110,7 @@ export class RevealViewComponent {
     return this.revealView.nativeElement.getRVDashboard();
   }
 
-  public copy(input: string | number): void {
+  public copy(input: string): void {
     this.revealView.nativeElement.copy(input);
   }
 

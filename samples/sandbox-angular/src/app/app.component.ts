@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DataSourcesRequestedArgs, RevealViewOptions } from 'reveal-sdk-wrappers';
 import { RevealViewComponent, VisualizationViewerComponent } from 'reveal-sdk-wrappers-angular';
+import { RevealSdkSettings, RVRESTDataSource } from 'reveal-sdk';
 
-declare const $: any;
-$.ig.RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/reveal-api/");
+RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/reveal-api/");
 
 @Component({
   standalone: true,
@@ -38,7 +38,7 @@ export class AppComponent {
   };
 
   dataSourcesRequested = (args: DataSourcesRequestedArgs) => {
-    const restDataSource = new $.ig.RVRESTDataSource();
+    const restDataSource = new RVRESTDataSource();
     restDataSource.url = "https://excel2json.io/api/share/6e0f06b3-72d3-4fec-7984-08da43f56bb9";
     restDataSource.title = "Sales by Category";
     restDataSource.subtitle = "Excel2Json";
