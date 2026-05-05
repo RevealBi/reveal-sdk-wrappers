@@ -142,7 +142,7 @@ export interface HeaderOptions {
      */
     showDescription?: boolean;
 
-    menu: boolean | {
+    menu?: boolean | {
         /**
          * Gets or sets if the menu item "Export to Image" is shown.
          */

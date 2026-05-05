@@ -37,7 +37,7 @@ export function App() {
   const menuOpening = (args: MenuOpeningArgs) => {
     if (args.visualization) {
       args.menuItems[6].isHidden = true; //hide the delete button
-      const newDeleteButton = new RVMenuItem("Delete", {}, () => {
+      const newDeleteButton = new RVMenuItem("Delete", null, () => {
         //todo: do you custom code here
 
         //perform the built-in delete operation using a backdoor
