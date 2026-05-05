@@ -308,14 +308,17 @@ export class RvRevealView extends LitElement {
 
         if (typeof this._mergedOptions.editor!.defaultChartType === "string") {
             const isValidChartType = Object.values(RVChartType).includes(this._mergedOptions.editor!.defaultChartType);
-            if(isValidChartType){
+            if (isValidChartType) {
                 this._revealView.defaultChartType = this._mergedOptions.editor!.defaultChartType;
-            }else{
-                this._revealView.defaultCustomChartType =  this._mergedOptions.editor!.defaultChartType;
+                this._revealView.defaultCustomChartType = null;
+            } else {
+                this._revealView.defaultCustomChartType = this._mergedOptions.editor!.defaultChartType;
+                this._revealView.defaultChartType = RVChartType.ColumnChart;
             }
         }
         else {
             this._revealView.defaultChartType = this._mergedOptions.editor!.defaultChartType!;
+            this._revealView.defaultCustomChartType = null;
         }
 
         this._revealView.canAddCalculatedFields = this._mergedOptions.editor!.addCalculatedFields!;
@@ -327,6 +330,7 @@ export class RvRevealView extends LitElement {
 
     private async updateDashboard(dashboard: string | unknown): Promise<void> {
         this._revealView!.dashboard = await this.loadRVDashboard(dashboard) as RVDashboard;
+        this.updateOptions(this.options);
     }
 
     private initializeEvents() {
@@ -600,7 +604,8 @@ export class RvRevealView extends LitElement {
 
     /**
      * Gets the current dashboard filters in the RevealView component.
-     * @returns {DashboardFilters} The current dashboard filters, or undefined if the RevealView component is not initialized.
+     * @returns {DashboardFilters} The current dashboard filters.
+     * @throws {Error} If the RevealView dashboard is not initialized.
      */
     getFilters(): DashboardFilters {
         if(!this._revealView?.dashboard){
@@ -667,9 +672,7 @@ export class RvRevealView extends LitElement {
 
         if (dashboardChanged) {
             this.updateDashboard(this.dashboard);
-        }
-
-        if (optionsChanged) {
+        } else if (optionsChanged) {
             this.updateOptions(this.options);
         }
 
