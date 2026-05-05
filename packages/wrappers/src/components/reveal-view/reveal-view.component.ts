@@ -244,7 +244,7 @@ export class RvRevealView extends LitElement {
     }
 
     private updateOptions(options: RevealViewOptions | undefined) {
-        if (!this._revealView || !this._revealView.dashboard) return;
+        if (!this._revealView) return;
 
         this._mergedOptions = merge({}, RevealViewDefaults, options) as RevealViewOptions;
 
