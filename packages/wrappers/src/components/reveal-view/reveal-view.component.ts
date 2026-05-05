@@ -473,8 +473,8 @@ export class RvRevealView extends LitElement {
 
    private updateDashboardLinkRequestedHandler(): void {        
         this._revealView!.onLinkedDashboardProviderAsync = (dashboardId: string, linkTitle: string | null | undefined): Promise<RVDashboard> => {
-            if (this.dashboardLinkRequested !== undefined && linkTitle) {
-                const result = this.dashboardLinkRequested({ dashboardId: dashboardId, title: linkTitle });
+            if (this.dashboardLinkRequested !== undefined) {
+                const result = this.dashboardLinkRequested({ dashboardId: dashboardId, title: linkTitle ?? "" });
 
                 // Handle string return type
                 if (typeof result === 'string') {
