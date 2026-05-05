@@ -532,11 +532,16 @@ export class RvRevealView extends LitElement {
     /**
      * Copies a visualization to the clipboard.
      * If a string ID is provided, the visualization with that ID is copied.
-     * @param {string} input The ID of the visualization to copy
+     * If a number index is provided, the visualization at that index is copied.
+     * @param {string | number} input The ID or index of the visualization to copy
      * @returns {void}
      */
-    copy(input: string): void {
-        this._revealView!.copyWidget(input);
+    copy(input: string | number): void {
+        if(typeof input === 'number'){
+            this._revealView!.copyWidgetAtIndex(input);
+        }else{
+            this._revealView!.copyWidget(input);
+        }
     }
 
     /**
