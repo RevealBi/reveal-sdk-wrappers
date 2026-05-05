@@ -111,19 +111,19 @@ export interface FilterOptions {
     /**
      * Gets or sets if the interactive filter behavior is enabled.
      */
-    interactiveFiltering: boolean;
+    interactiveFiltering?: boolean;
     /**
      * Gets or sets if the filters are shown.
      */
-    showFilters: boolean;
+    showFilters?: boolean;
     /**
      * Gets or sets if the user can add a date filter.
      */
-    addDateFilter: boolean;
+    addDateFilter?: boolean;
     /**
      * Gets or sets if the user can add a dashboard filter.
      */
-    addDashboardFilter: boolean;
+    addDashboardFilter?: boolean;
 }
 
 export interface HeaderOptions {

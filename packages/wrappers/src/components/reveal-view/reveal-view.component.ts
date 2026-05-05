@@ -277,26 +277,26 @@ export class RvRevealView extends LitElement {
         }
 
         //filters
-        this._revealView.showFilters = this._mergedOptions.filters!.showFilters;
-        this._revealView.canAddDashboardFilter = this._mergedOptions.filters!.addDashboardFilter;
-        this._revealView.canAddDateFilter = this._mergedOptions.filters!.addDateFilter;
-        this._revealView.interactiveFilteringEnabled = this._mergedOptions.filters!.interactiveFiltering;
+        this._revealView.showFilters = this._mergedOptions.filters!.showFilters!;
+        this._revealView.canAddDashboardFilter = this._mergedOptions.filters!.addDashboardFilter!;
+        this._revealView.canAddDateFilter = this._mergedOptions.filters!.addDateFilter!;
+        this._revealView.interactiveFilteringEnabled = this._mergedOptions.filters!.interactiveFiltering!;
 
         //visualizations
-        this._revealView.canMaximizeVisualization = this._mergedOptions.visualizations!.canMaximize;
-        this._revealView.categoryGroupingSeparator = this._mergedOptions.visualizations!.categoryGroupingSeparator;
-        this._revealView.crosshairsEnabled = this._mergedOptions.visualizations!.crosshairs;
-        this._revealView.hoverTooltipsEnabled = this._mergedOptions.visualizations!.hoverTooltips;
-        this._revealView.showChangeVisualization = this._mergedOptions.visualizations!.changeChartType;
-        this._revealView.showStatisticalFunctions = this._mergedOptions.visualizations!.statisticalFunctions;
-        this._revealView.canCopyVisualization = this._mergedOptions.visualizations!.menu!.copy;
-        this._revealView.canDuplicateVisualization = this._mergedOptions.visualizations!.menu!.duplicate;
+        this._revealView.canMaximizeVisualization = this._mergedOptions.visualizations!.canMaximize!;
+        this._revealView.categoryGroupingSeparator = this._mergedOptions.visualizations!.categoryGroupingSeparator!;
+        this._revealView.crosshairsEnabled = this._mergedOptions.visualizations!.crosshairs!;
+        this._revealView.hoverTooltipsEnabled = this._mergedOptions.visualizations!.hoverTooltips!;
+        this._revealView.showChangeVisualization = this._mergedOptions.visualizations!.changeChartType!;
+        this._revealView.showStatisticalFunctions = this._mergedOptions.visualizations!.statisticalFunctions!;
+        this._revealView.canCopyVisualization = this._mergedOptions.visualizations!.menu!.copy!;
+        this._revealView.canDuplicateVisualization = this._mergedOptions.visualizations!.menu!.duplicate!;
 
         //dataSourceDialog
-        this._revealView.showDataSourceSelectionDialogSearch = this._mergedOptions.dataSourceDialog!.showSearch;
+        this._revealView.showDataSourceSelectionDialogSearch = this._mergedOptions.dataSourceDialog!.showSearch!;
 
         //editor
-        this._revealView.chartTypes = this._mergedOptions.editor!.chartTypes(this._revealView.chartTypes);
+        this._revealView.chartTypes = this._mergedOptions.editor!.chartTypes!(this._revealView.chartTypes);
 
         if (this._mergedOptions.editor!.chartTypesToRemove) {
             this._revealView.chartTypes = this._revealView.chartTypes.filter((x: any) => !this._mergedOptions.editor!.chartTypesToRemove!.includes(x.chartType));
@@ -315,14 +315,14 @@ export class RvRevealView extends LitElement {
             }
         }
         else {
-            this._revealView.defaultChartType = this._mergedOptions.editor!.defaultChartType;
+            this._revealView.defaultChartType = this._mergedOptions.editor!.defaultChartType!;
         }
 
-        this._revealView.canAddCalculatedFields = this._mergedOptions.editor!.addCalculatedFields;
-        this._revealView.canAddPostCalculatedFields = this._mergedOptions.editor!.addPostCalculatedFields;
-        this._revealView.showDataBlending = this._mergedOptions.editor!.dataBlending;
-        this._revealView.showEditDataSource = this._mergedOptions.editor!.editDataSource;
-        this._revealView.showMachineLearningModelsIntegration = this._mergedOptions.editor!.machineLearning;
+        this._revealView.canAddCalculatedFields = this._mergedOptions.editor!.addCalculatedFields!;
+        this._revealView.canAddPostCalculatedFields = this._mergedOptions.editor!.addPostCalculatedFields!;
+        this._revealView.showDataBlending = this._mergedOptions.editor!.dataBlending!;
+        this._revealView.showEditDataSource = this._mergedOptions.editor!.editDataSource!;
+        this._revealView.showMachineLearningModelsIntegration = this._mergedOptions.editor!.machineLearning!;
     }
 
     private async updateDashboard(dashboard: string | unknown): Promise<void> {
@@ -405,7 +405,7 @@ export class RvRevealView extends LitElement {
         if (changedProperties.has('seriesColorRequested')) {
             if (this.seriesColorRequested !== undefined) {
                 this._revealView!.onVisualizationSeriesColorAssigning = (visualization: RVVisualization, defaultColor: string, fieldName: string | null, categoryName: string | null) => {
-                    if(fieldName && categoryName){
+                    if (fieldName != null && categoryName != null) {
                         const customColor = this.seriesColorRequested?.({
                             visualization: visualization,
                             defaultColor: defaultColor,
@@ -418,6 +418,8 @@ export class RvRevealView extends LitElement {
                         return defaultColor
                     }
                 }
+            }else {
+                this._revealView!.onVisualizationSeriesColorAssigning = null;
             }
         }
 
@@ -428,6 +430,8 @@ export class RvRevealView extends LitElement {
                     // Return custom URL if defined, otherwise return the original URL or null
                     return customUrl ?? args.url ?? null;
                 }
+            }else {
+                this._revealView!.onUrlLinkRequested = null;
             }
         }
     }
@@ -467,7 +471,7 @@ export class RvRevealView extends LitElement {
                 dataSources.push(...result.dataSources);
                 dataSourceItems.push(...result.dataSourceItems);
             }
-            onComplete(new RevealDataSources(dataSources, dataSourceItems, this._mergedOptions.dataSourceDialog!.showExistingDataSources));
+            onComplete(new RevealDataSources(dataSources, dataSourceItems, this._mergedOptions.dataSourceDialog!.showExistingDataSources!));
         };
     }
 
@@ -531,17 +535,12 @@ export class RvRevealView extends LitElement {
 
     /**
      * Copies a visualization to the clipboard.
-     * If a string ID is provided, the visualization with that ID is copied.
-     * If a number index is provided, the visualization at that index is copied.
-     * @param {string | number} input The ID or index of the visualization to copy
+     * The visualization with that ID is copied.
+     * @param {string} input The ID of the visualization to copy
      * @returns {void}
      */
-    copy(input: string | number): void {
-        if(typeof input === 'number'){
-            this._revealView!.copyWidgetAtIndex(input);
-        }else{
-            this._revealView!.copyWidget(input);
-        }
+    copy(input: string): void {
+        this._revealView!.copyWidget(input);
     }
 
     /**

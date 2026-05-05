@@ -34,7 +34,7 @@ export interface RvRevealViewRef {
   // Methods
   addTextBoxVisualization(): void;
   addVisualization(): void;
-  copy(input: string | number): void;
+  copy(input: string): void;
   enterEditMode(): void;
   exitEditMode(applyChanges?: boolean): void;
   exportToExcel(): void;
@@ -230,7 +230,7 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
       elementRef.current?.addVisualization();
     },
 
-    copy: (input: string | number) => {
+    copy: (input: string) => {
       elementRef.current?.copy(input);
     },
 
