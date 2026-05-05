@@ -639,7 +639,7 @@ export class RvRevealView extends LitElement {
     refreshData(input?: string | number): void {
 
         if(!this._revealView?.dashboard){
-            throw new Error("Cannot refresh the RevealView dashboard is not defined.");
+            throw new Error("Cannot refresh because the RevealView dashboard is not defined.");
         }
 
         if (typeof input === "string") {
