@@ -445,7 +445,7 @@ export class RvRevealView extends LitElement {
             const createMenuItems = (items: MenuItem[], clickCallback: (item: any) => void) => {
                 items.forEach(item => {
                     const icon = item.icon ? new RVImage(item.icon, "icon") : undefined;
-                    e.menuItems.push(new RVMenuItem(item.title, icon as RVImage, () => clickCallback(item)));
+                    e.menuItems.push(new RVMenuItem(item.title, icon as object, () => clickCallback(item)));
                 });
             };
 
@@ -536,15 +536,15 @@ export class RvRevealView extends LitElement {
     addVisualization(): void {
         this._revealView!.addVisualization();
     }
-
     /**
-     * Copies a visualization to the clipboard.
-     * The visualization with that ID is copied.
-     * @param {string} input The ID of the visualization to copy
+    * Copies a visualization to the clipboard.
+     * If a string ID is provided, the visualization with that ID is copied.
+     * If a number index is provided, the visualization at that index is copied.
+     * @param {string | number} input The ID or index of the visualization to copy
      * @returns {void}
      */
-    copy(input: string): void {
-        this._revealView!.copyWidget(input);
+    copy(input: string | number): void {
+        (this._revealView! as any)._copy(input);
     }
 
     /**
@@ -569,7 +569,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     exportToExcel(): void {
-        this._revealView!.exportToExcelOrCsv(false);
+        (this._revealView as any)._export("xlsx");
     }
 
     /**
@@ -579,7 +579,7 @@ export class RvRevealView extends LitElement {
      */
     exportToImage(showDialog: boolean = true): void | Promise<Element | null> {        
         if (showDialog) {
-            this._revealView!.exportImage();
+            (this._revealView as any)._export("image");
             return;
         }
 
@@ -591,7 +591,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     exportToPdf(): void {
-        this._revealView!.exportFormat("pdf");
+        (this._revealView as any)._export("pdf");
     }
 
     /**
@@ -599,7 +599,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     exportToPowerPoint(): void {
-        this._revealView!.exportFormat("pptx");
+        (this._revealView as any)._export("pptx");
     }
 
     /**
@@ -630,7 +630,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     paste(target?: RvRevealView): void {
-        target?.paste() ?? this._revealView!.pasteWidget();
+        target?.paste() ?? (this._revealView as any)._paste();
     }
 
     /**
@@ -648,9 +648,9 @@ export class RvRevealView extends LitElement {
         }
 
         if (typeof input === "string") {
-            this._revealView!.refreshWidget(input);
+            (this._revealView as any)._refreshVisualization(input);
         } else if (typeof input === "number") {
-            this._revealView!.refreshWidget(this._revealView!.dashboard.visualizations[input].id);
+            (this._revealView as any)._refreshVisualization(this._revealView!.dashboard.visualizations[input].id);
         } else {
             this._revealView!.refreshDashboardData();
         }

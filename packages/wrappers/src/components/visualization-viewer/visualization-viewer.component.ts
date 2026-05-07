@@ -5,8 +5,7 @@ import { VisualizationViewerDefaults } from "./options/visualization-viewer-opti
 import styles from "./visualization-viewer.styles";
 import { merge } from "../common/utilties/merge";
 import { DashboardLoader } from "../common/utilties/dashboard-loader";
-
-declare let $: any;
+import { RevealView, RVImage, RVMenuItem } from "reveal-sdk";
 
 /**
  * A web component that wraps the jQuery RevealView component and configures it to display a single visualization.
@@ -15,7 +14,7 @@ export class RvVisualizationViewer extends LitElement {
     static override styles = styles;
     static readonly tagName = 'rv-visualization-viewer';
 
-    private _revealView: any = null;
+    private _revealView: RevealView | null = null;
     private _mergedOptions: VisualizationViewerOptions = {};
 
     @property({ type: String }) dashboard: string | unknown = "";
@@ -45,7 +44,10 @@ export class RvVisualizationViewer extends LitElement {
         const rvDashboard = await this.loadRVDashboard(dashboard);
 
         const selector = this.renderRoot.querySelector('#rv-viewer');
-        this._revealView = new $.ig.RevealView(selector);
+        if (!selector) {
+            throw new Error('RevealView container element #rv-viewer not found');
+        }
+        this._revealView = new RevealView(selector);
         this._revealView.singleVisualizationMode = true;
 
         this.updateOptions(options);
@@ -62,7 +64,8 @@ export class RvVisualizationViewer extends LitElement {
                 if (typeof this._mergedOptions.menu !== 'boolean' && this._mergedOptions.menu && this._mergedOptions.menu.items) {
                     const vizItems = this._mergedOptions.menu.items;
                     vizItems.forEach(vizItem => {
-                        e.menuItems.push(new $.ig.RVMenuItem(vizItem.title, vizItem.icon, () => vizItem.click(viz)));
+                        const icon = vizItem.icon ? new RVImage(vizItem.icon, "icon") : undefined;
+                        e.menuItems.push(new RVMenuItem(vizItem.title, icon as object, () => vizItem.click(viz)));
                     })
                 }
             }
@@ -71,7 +74,7 @@ export class RvVisualizationViewer extends LitElement {
 
     private setVisualization(dashboard: any, visualization: string | number | undefined) {
         if (!dashboard || !dashboard.visualizations || dashboard.visualizations.length === 0) {
-            this._revealView.maximizedVisualization = null;
+            this._revealView!.maximizedVisualization = null;
             return;
         }
 
@@ -99,15 +102,15 @@ export class RvVisualizationViewer extends LitElement {
             console.log(`Visualization ${typeof visualization === "string" ? `with ID or title "${visualization}"` : `at index ${visualization}`} is not found. Loading the default vizualization.`);
         }
 
-        this._revealView.maximizedVisualization = viz;
+        this._revealView!.maximizedVisualization = viz;
     }
 
     private async updateDashboard(dashboard: string | unknown, visualization?: string | number): Promise<void> {
         if (!this._revealView) {
             return;
         }
-        this._revealView.dashboard = await this.loadRVDashboard(dashboard);
-        this.setVisualization(this._revealView.dashboard, visualization);
+        this._revealView!.dashboard = await this.loadRVDashboard(dashboard);
+        this.setVisualization(this._revealView!.dashboard, visualization);
     }
 
     private updateOptions(options: VisualizationViewerOptions | undefined) {
@@ -129,12 +132,12 @@ export class RvVisualizationViewer extends LitElement {
         }
 
         this._revealView.showExportToPDF =  false; //single viz does not allow export to PDF does it?
-        this._revealView.showFilters = this._mergedOptions.showFilters;
-        this._revealView.categoryGroupingSeparator = this._mergedOptions.categoryGroupingSeparator;
-        this._revealView.crosshairsEnabled = this._mergedOptions.crosshairs;
-        this._revealView.hoverTooltipsEnabled = this._mergedOptions.hoverTooltips;
-        this._revealView.showChangeVisualization = this._mergedOptions.changeChartType;
-        this._revealView.showStatisticalFunctions = this._mergedOptions.statisticalFunctions;
+        this._revealView.showFilters = this._mergedOptions.showFilters!;
+        this._revealView.categoryGroupingSeparator = this._mergedOptions.categoryGroupingSeparator!;
+        this._revealView.crosshairsEnabled = this._mergedOptions.crosshairs!;
+        this._revealView.hoverTooltipsEnabled = this._mergedOptions.hoverTooltips!;
+        this._revealView.showChangeVisualization = this._mergedOptions.changeChartType!;
+        this._revealView.showStatisticalFunctions = this._mergedOptions.statisticalFunctions!   ;
     }
 
     private updateVisualization(visualization?: string | number) {
@@ -160,17 +163,12 @@ export class RvVisualizationViewer extends LitElement {
      * @returns {void}
      */
     copy(): void {
-        const widgetId = this._revealView.maximizedVisualization.id;
+        const widgetId = this._revealView!.maximizedVisualization!.id;
         if (!widgetId) {
             console.warn("No visualization is currently loaded to copy.");
             return;
         }
-
-        const widgets = this._revealView._dashboardView.__widgets;
-        const sourceWidget = widgets.find((widget: any) => widget._widget._id === widgetId);
-        if (sourceWidget) {
-            this._revealView._dashboardView.widgetCopied(sourceWidget._widget);
-        }
+        (this._revealView as any)._copy(widgetId);
     }
 
     /**
