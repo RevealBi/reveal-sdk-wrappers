@@ -526,7 +526,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     addTextBoxVisualization(): void {
-        this._revealView!.addTextBoxVisualization();
+        (this._revealView as any)._showAddTextBoxVisualization();
     }
 
     /**
@@ -534,7 +534,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     addVisualization(): void {
-        this._revealView!.addVisualization();
+        (this._revealView as any)._showAddVisualization();0
     }
     /**
     * Copies a visualization to the clipboard.
@@ -569,7 +569,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     exportToExcel(): void {
-        (this._revealView as any)._export("xlsx");
+        (this._revealView as any)._showExport("xlsx");
     }
 
     /**
@@ -579,7 +579,7 @@ export class RvRevealView extends LitElement {
      */
     exportToImage(showDialog: boolean = true): void | Promise<Element | null> {        
         if (showDialog) {
-            (this._revealView as any)._export("image");
+            (this._revealView as any)._showExport("image");
             return;
         }
 
@@ -591,7 +591,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     exportToPdf(): void {
-        (this._revealView as any)._export("pdf");
+        (this._revealView as any)._showExport("pdf");
     }
 
     /**
@@ -599,7 +599,7 @@ export class RvRevealView extends LitElement {
      * @returns {void}
      */
     exportToPowerPoint(): void {
-        (this._revealView as any)._export("pptx");
+        (this._revealView as any)._showExport("pptx");
     }
 
     /**
