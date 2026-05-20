@@ -34,7 +34,7 @@ export interface RvRevealViewRef {
   // Methods
   addTextBoxVisualization(): void;
   addVisualization(): void;
-  copy(input: string): void;
+  copy(input: string | number): void;
   enterEditMode(): void;
   exitEditMode(applyChanges?: boolean): void;
   exportToExcel(): void;
