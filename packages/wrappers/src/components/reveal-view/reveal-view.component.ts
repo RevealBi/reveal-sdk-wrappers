@@ -409,18 +409,14 @@ export class RvRevealView extends LitElement {
         if (changedProperties.has('seriesColorRequested')) {
             if (this.seriesColorRequested !== undefined) {
                 this._revealView!.onVisualizationSeriesColorAssigning = (visualization: RVVisualization, defaultColor: string, fieldName: string | null, categoryName: string | null) => {
-                    if (fieldName != null && categoryName != null) {
-                        const customColor = this.seriesColorRequested?.({
-                            visualization: visualization,
-                            defaultColor: defaultColor,
-                            fieldName: fieldName,
-                            categoryName: categoryName
-                        });
-                        // Return custom color if defined, otherwise return the default color
-                        return customColor ?? defaultColor;
-                    }else{
-                        return defaultColor
-                    }
+                    const customColor = this.seriesColorRequested?.({
+                        visualization: visualization,
+                        defaultColor: defaultColor,
+                        fieldName: fieldName ?? '',
+                        categoryName: categoryName ?? ''
+                    });
+                    // Return custom color if defined, otherwise return the default color
+                    return customColor ?? defaultColor;
                 }
             }else {
                 this._revealView!.onVisualizationSeriesColorAssigning = null;
