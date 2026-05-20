@@ -137,7 +137,7 @@ export class RvVisualizationViewer extends LitElement {
         this._revealView.crosshairsEnabled = this._mergedOptions.crosshairs!;
         this._revealView.hoverTooltipsEnabled = this._mergedOptions.hoverTooltips!;
         this._revealView.showChangeVisualization = this._mergedOptions.changeChartType!;
-        this._revealView.showStatisticalFunctions = this._mergedOptions.statisticalFunctions!   ;
+        this._revealView.showStatisticalFunctions = this._mergedOptions.statisticalFunctions!;
     }
 
     private updateVisualization(visualization?: string | number) {
