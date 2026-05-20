@@ -9,7 +9,6 @@ import { RevealViewDefaults } from "./options/reveal-view-options-defaults";
 import { DashboardLoader } from "../common/utilties/dashboard-loader";
 import { getRVDataSources } from "../common/utilties/data-source-factory";
 import { merge } from "../common/utilties/merge";
-import { BuiltInLocales } from "reveal-sdk";
 import { RevealView, RVImage, RVMenuItem, RevealDataSources, RVDashboard, RVChartType, RVVisualization, RevealSdkSettings } from "reveal-sdk";
 
 
