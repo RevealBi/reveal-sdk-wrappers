@@ -2,8 +2,6 @@
 
 import { RVDashboard } from "reveal-sdk";
 
-declare let $: any;
-
 export class DashboardLoader {
 
     static async load(dashboard?: any): Promise<any | null> {
