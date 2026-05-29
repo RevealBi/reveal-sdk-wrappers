@@ -4,7 +4,7 @@
   "sourceRoot": "packages/wrappers/src",
   "projectType": "library",
   "targets": {
-    "build": {
+    "build-es": {
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -12,6 +12,18 @@
         "main": "packages/wrappers/src/index.ts",
         "tsConfig": "packages/wrappers/tsconfig.lib.json",
         "assets": []
+      }
+    },
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["build-es"],
+      "options": {
+        "outputPath": "dist/packages/wrappers",
+        "main": "packages/wrappers/src/index.ts",
+        "tsConfig": "packages/wrappers/tsconfig.lib.json",
+        "assets": [],
+        "mode": "umd"
       }
     },
     "nx-release-publish": {

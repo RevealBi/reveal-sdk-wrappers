@@ -44,11 +44,17 @@ export default defineConfig({
     rollupOptions: {
       external: (id) => {
         // More aggressive externalization
-        return id === 'react' || 
-               id === 'react-dom' || 
+        return id === 'react' ||
+               id === 'react-dom' ||
                id === 'react/jsx-runtime' ||
                id.startsWith('react/') ||
-               id.startsWith('react-dom/');
+               id.startsWith('react-dom/') ||
+               id === 'reveal-sdk-wrappers' ||
+               id.startsWith('reveal-sdk-wrappers/') ||
+               id === 'reveal-sdk' ||
+               id.startsWith('reveal-sdk/') ||
+               id === 'lit' ||
+               id.startsWith('lit/');
       },
       output: {
         globals: {
