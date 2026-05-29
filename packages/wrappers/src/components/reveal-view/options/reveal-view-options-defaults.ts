@@ -1,5 +1,5 @@
-import { ChartType } from "../enums";
 import { RevealViewOptions } from "./reveal-view-options";
+import { RVChartTypeItem, RVChartType} from "reveal-sdk";
 
 export const RevealViewDefaults: RevealViewOptions = Object.freeze({
     canEdit: true,
@@ -52,7 +52,10 @@ export const RevealViewDefaults: RevealViewOptions = Object.freeze({
     },
 
     editor: {
-        defaultChartType: ChartType.ColumnChart,
+        chartTypes: (chartTypes: RVChartTypeItem[]) => chartTypes,
+        chartTypesToRemove: [], 
+        chartTypesToAdd: [], 
+        defaultChartType: RVChartType.ColumnChart,
         addPostCalculatedFields: true,
         addCalculatedFields: true,
         dataBlending: true,

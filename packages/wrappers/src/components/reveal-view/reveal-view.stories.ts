@@ -40,7 +40,7 @@ export const ExportStory: Story = {
             <button onclick="revealView.exportToPdf()">Export PDF</button>
             <button onclick="revealView.exportToPowerPoint()">Export PPT</button>            
         </div>
-        <rv-reveal-view id="revealView" dashboard="Sales"></rv-reveal-view>
+        <rv-reveal-view id="revealView" .dashboard=${args.dashboard}></rv-reveal-view>
     </div>
     `,
 };
@@ -51,7 +51,7 @@ export const OptionsStory: Story = {
         options: RevealViewDefaults
     },
     render: (args: any) => html`
-    <rv-reveal-view dashboard="Sales" .options=${args.options}></rv-reveal-view>
+    <rv-reveal-view .dashboard=${args.dashboard} .options=${args.options}></rv-reveal-view>
     `,
 };
 
@@ -72,7 +72,7 @@ export const RefreshtStory: Story = {
                 rv.refreshData(vizId);
             }} >Refresh Visualization by Id</button>                      
         </div>
-        <rv-reveal-view id="revealView" dashboard="Sales"></rv-reveal-view>
+        <rv-reveal-view id="revealView" .dashboard=${args.dashboard}></rv-reveal-view>
     </div>
     `,
 };

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-declare let $: any;
+import { RVDashboard } from "reveal-sdk";
 
 export class DashboardLoader {
 
@@ -26,9 +26,9 @@ export class DashboardLoader {
     
     private static async loadRVDashboard(input: string | Blob): Promise<any> {    
         if (typeof input === 'string') {
-           return await $.ig.RVDashboard.loadDashboard(input);
+           return await RVDashboard.loadDashboard(input);
         } else {
-            return $.ig.RVDashboard.loadDashboardFromContainer(input);
+            return RVDashboard.loadDashboardFromContainer(input);
         }
     }
 

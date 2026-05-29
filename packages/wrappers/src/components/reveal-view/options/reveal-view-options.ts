@@ -1,6 +1,7 @@
 import { MenuItem } from "../../common/interfaces/menu-item";
 import { ChartType } from "../enums/chart-type";
 import { DataSourcesConfig } from "../data-sources";
+import { RVChartType, RVChartTypeItem } from "reveal-sdk";
 
 
 export interface RevealViewOptions {
@@ -68,22 +69,22 @@ export interface DataSourceDialogOptions {
 export interface EditorOptions {
     /**
      * Modifies, filters, or augments the provided list of chart types that appear in the Chart Types selection dialog.
-     * @param {ChartTypeItem[]} chartTypes - The array of default chart type items.
-     * @returns {ChartTypeItem[]} - An array of processed chart type items.
+     * @param {RVChartTypeItem[]} chartTypes - The array of default chart type items.
+     * @returns {RVChartTypeItem[]} - An array of processed chart type items.
      */
-    chartTypes?: (chartTypes: ChartTypeItem[]) => ChartTypeItem[];
+    chartTypes?: (chartTypes: RVChartTypeItem[]) => RVChartTypeItem[];
     /**
      * Gets or sets the array of chart types to remove from the default chart types.
      */
-    chartTypesToRemove?: ChartType[];
+    chartTypesToRemove?: RVChartType[];
     /**
      * Gets or sets the array of custom chart types to add to the Chart Types selection dialog.
      */
-    chartTypesToAdd?: ChartTypeCustomItem[];
+    chartTypesToAdd?: RVChartTypeItem[];
     /**
      * Gets or sets the default chart type to use when creating a new visualization.
      */
-    defaultChartType?: ChartType | string;
+    defaultChartType?: RVChartType;
     /**
      * Gets or set if the f(x) option in numeric values sections (like "Values") should be displayed or not.
      */

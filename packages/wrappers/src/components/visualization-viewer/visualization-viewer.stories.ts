@@ -31,11 +31,11 @@ export const FirstStory: Story = {
 export const SecondStory: Story = {
     name: 'Visualization by Title',
     args: {
-        visualization: 'Leads by Year'
+        visualization: 'Sales by Product'
     },
     argTypes: {
         visualization: { 
-            options: [ 'Leads by Year', 'Revenue by State', 'New Seats Avg by Employee', 'Sales by Product' ],
+            options: [ 'Sales', 'New vs Renewal Sales', 'Total Opportunities', 'New Seats by Product', 'Sales by Product' ],
             control: 'select' 
         },
     },

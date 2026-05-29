@@ -230,7 +230,7 @@ export const RvRevealView = forwardRef<RvRevealViewRef, RvRevealViewProps>((prop
       elementRef.current?.addVisualization();
     },
 
-    copy: (input: string | number) => {
+    copy: (input: string) => {
       elementRef.current?.copy(input);
     },
 

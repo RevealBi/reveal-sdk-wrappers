@@ -110,8 +110,23 @@ export class RevealViewComponent {
     return this.revealView.nativeElement.getRVDashboard();
   }
 
+  private resolveWidgetId(input: string | number): string | undefined {
+    if (typeof input === 'string') {
+      return input;
+    }
+
+    const dashboard = this.getRVDashboard();
+    const visualizations = dashboard?.visualizations;
+    const widget = Array.isArray(visualizations) ? visualizations[input] : undefined;
+
+    return widget?.id;
+  }
+
   public copy(input: string | number): void {
-    this.revealView.nativeElement.copy(input);
+    const widgetId = this.resolveWidgetId(input);
+    if (widgetId !== undefined) {
+      this.revealView.nativeElement.copy(widgetId);
+    }
   }
 
   public paste(target?: RvRevealView): void {
