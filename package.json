@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "storybook": "nx run wrappers:storybook",
-    "storybookAngular": "nx run sandbox-angular:serve",
-    "storybookReact": "nx run sandbox-react:serve"
+    "serve:angular": "nx run sandbox-angular:serve",
+    "serve:react": "nx run sandbox-react:serve"
   },
   "private": true,
   "dependencies": {

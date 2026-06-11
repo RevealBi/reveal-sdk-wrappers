@@ -23,8 +23,8 @@ import {
   RVMenuSeparatorItem,
 } from 'reveal-sdk';
 
-// RevealSdkSettings.setBaseUrl('https://samples.revealbi.io/upmedia-backend/reveal-api/');
-RevealSdkSettings.setBaseUrl("https://localhost:44380/");
+// RevealSdkSettings.setBaseUrl('https://localhost:44380/');
+RevealSdkSettings.setBaseUrl('https://samples.revealbi.io/upmedia-backend/reveal-api/');
 
 interface LogEntry {
   time: string;

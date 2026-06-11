@@ -1,8 +1,8 @@
 import { RvDashboardChangedArgs, defineRevealSdkWrappers, RevealViewOptions, RvRevealView, UrlLinkRequestedArgs } from "reveal-sdk-wrappers";
+import { RevealSdkSettings } from "reveal-sdk";
 defineRevealSdkWrappers();
 
-declare const $: any;
-$.ig.RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/reveal-api/");
+RevealSdkSettings.setBaseUrl("https://samples.revealbi.io/upmedia-backend/reveal-api/");
 
 const options: RevealViewOptions = {
     //canSave: false,
