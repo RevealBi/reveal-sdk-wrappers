@@ -1,0 +1,94 @@
+name: Deploy Sandbox Samples to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - run: npm ci --legacy-peer-deps
+
+      - name: Build Web Components sandbox
+        run: npx nx run sandbox:build --skip-nx-cache
+        env:
+          VITE_BASE: /reveal-sdk-wrappers/sandbox/
+
+      - name: Build React sandbox
+        run: npx nx run sandbox-react:build --skip-nx-cache
+        env:
+          VITE_BASE: /reveal-sdk-wrappers/sandbox-react/
+
+      - name: Build Angular sandbox
+        run: npx nx run sandbox-angular:build --skip-nx-cache -- --base-href /reveal-sdk-wrappers/sandbox-angular/
+
+      - name: Assemble Pages output
+        run: |
+          mkdir -p pages/sandbox
+          mkdir -p pages/sandbox-react
+          mkdir -p pages/sandbox-angular
+          cp -r dist/samples/sandbox/. pages/sandbox/
+          cp -r dist/samples/sandbox-react/. pages/sandbox-react/
+          cp -r dist/samples/sandbox-angular/browser/. pages/sandbox-angular/
+          cat > pages/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Reveal SDK Wrappers – Sandbox Samples</title>
+            <style>
+              body { font-family: sans-serif; max-width: 640px; margin: 4rem auto; padding: 0 1rem; }
+              h1 { font-size: 1.5rem; }
+              ul { list-style: none; padding: 0; }
+              li { margin: 0.75rem 0; }
+              a { font-size: 1.1rem; text-decoration: none; color: #0070f3; }
+              a:hover { text-decoration: underline; }
+            </style>
+          </head>
+          <body>
+            <h1>Reveal SDK Wrappers – Sandbox Samples</h1>
+            <ul>
+              <li><a href="sandbox/">Web Components Sandbox</a></li>
+              <li><a href="sandbox-react/">React Sandbox</a></li>
+              <li><a href="sandbox-angular/">Angular Sandbox</a></li>
+            </ul>
+          </body>
+          </html>
+          EOF
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
