@@ -1,0 +1,199 @@
+/* ── Shell ──────────────────────────────────────────────── */
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 13px;
+}
+
+/* ── Toolbar ────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: #2d2d2d;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  z-index: 10;
+}
+
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolbar .label {
+  font-size: 11px;
+  color: #aaa;
+  margin-right: 2px;
+  white-space: nowrap;
+}
+
+.toolbar select {
+  background: #3d3d3d;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.toolbar select:focus {
+  outline: none;
+  border-color: #888;
+}
+
+.btn {
+  background: #444;
+  color: #fff;
+  border: 1px solid #666;
+  border-radius: 4px;
+  padding: 4px 9px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s;
+}
+.btn:hover { background: #555; }
+.btn.active { background: #e67e22; border-color: #d35400; }
+.btn.success { background: #27ae60; border-color: #219a52; }
+
+.sep {
+  width: 1px;
+  height: 22px;
+  background: #555;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: #ccc;
+  font-size: 12px;
+  user-select: none;
+}
+.toggle input { cursor: pointer; accent-color: #4ec9b0; }
+.toggle:hover span { color: #fff; }
+
+/* ── Main area ──────────────────────────────────────────── */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.reveal {
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ── Event log panel ────────────────────────────────────── */
+.log-panel {
+  width: 290px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border-left: 1px solid #333;
+  font-size: 11px;
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  background: #252526;
+  border-bottom: 1px solid #333;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ccc;
+  flex-shrink: 0;
+}
+
+.btn-sm {
+  background: #333;
+  color: #aaa;
+  border: 1px solid #555;
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-size: 10px;
+  cursor: pointer;
+}
+.btn-sm:hover { color: #fff; }
+
+.log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.log-entry {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 4px;
+  padding: 5px 8px;
+  border-bottom: 1px solid #2a2a2a;
+  border-left: 3px solid transparent;
+}
+.log-entry.info    { border-left-color: #569cd6; }
+.log-entry.action  { border-left-color: #4ec9b0; }
+.log-entry.warning { border-left-color: #dcdcaa; }
+
+.log-time {
+  grid-column: 1;
+  grid-row: 1;
+  color: #666;
+}
+
+.log-event {
+  grid-column: 2;
+  grid-row: 1;
+  font-weight: 600;
+}
+.log-entry.info .log-event    { color: #569cd6; }
+.log-entry.action .log-event  { color: #4ec9b0; }
+.log-entry.warning .log-event { color: #dcdcaa; }
+
+.log-detail {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  color: #9cdcfe;
+  word-break: break-all;
+  padding-top: 1px;
+}
+
+.log-legend {
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
+  border-top: 1px solid #333;
+  color: #666;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 3px;
+}
+.dot.info    { background: #569cd6; }
+.dot.action  { background: #4ec9b0; }
+.dot.warning { background: #dcdcaa; }

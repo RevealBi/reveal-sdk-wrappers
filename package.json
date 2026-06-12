@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "storybook": "nx run wrappers:storybook"
+    "storybook": "nx run wrappers:storybook",
+    "serve:angular": "nx run sandbox-angular:serve",
+    "serve:react": "nx run sandbox-react:serve"
   },
   "private": true,
   "dependencies": {

@@ -1,9 +1,112 @@
-<rva-reveal-view [dashboard]="dashboard" [options]="options"></rva-reveal-view>
+<div class="shell">
 
-<!-- <rva-reveal-view [dashboard]="dashboard" [options]="options"
-    [dataSourcesRequested]="dataSourcesRequested">
-</rva-reveal-view> -->
+  <!-- ═══════════════════════ TOOLBAR ═══════════════════════ -->
+  <header class="toolbar">
 
-<!-- <rva-visualization-viewer [dashboard]="dashboard" visualization="3"></rva-visualization-viewer> -->
- 
-<!-- <router-outlet></router-outlet> -->
+    <!-- Feature 1: Dashboard Switching -->
+    <div class="ctrl-group">
+      <span class="label">Dashboard</span>
+      <select [(ngModel)]="dashboard">
+        <option *ngFor="let d of dashboards" [value]="d">{{ d }}</option>
+      </select>
+    </div>
+
+    <!-- Feature 2: Theme Switching -->
+    <div class="ctrl-group">
+      <span class="label">Theme</span>
+      <select [(ngModel)]="selectedTheme" (change)="onThemeChange()">
+        <option *ngFor="let t of themes" [value]="t.value">{{ t.label }}</option>
+      </select>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Feature 3: Edit Mode -->
+    <div class="ctrl-group">
+      <button class="btn" [class.active]="isEditMode" (click)="toggleEditMode()">
+        ✏️ {{ isEditMode ? 'Exit Edit' : 'Edit' }}
+      </button>
+      <button class="btn success" *ngIf="isEditMode" (click)="applyEditChanges()">
+        ✔ Apply
+      </button>
+    </div>
+
+    <!-- Refresh -->
+    <div class="ctrl-group">
+      <button class="btn" (click)="refreshData()">↺ Refresh</button>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Feature 4: Export -->
+    <div class="ctrl-group">
+      <span class="label">Export</span>
+      <button class="btn" (click)="exportImage()">🖼 Image</button>
+      <button class="btn" (click)="exportExcel()">📊 Excel</button>
+      <button class="btn" (click)="exportPdf()">📄 PDF</button>
+      <button class="btn" (click)="exportPpt()">📝 PPT</button>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Features 6, 7, 8: Toggles -->
+    <div class="ctrl-group">
+      <label class="toggle" title="Feature 6 – Override chart series colours with a custom palette">
+        <input type="checkbox" [(ngModel)]="customColors" (ngModelChange)="onToggleCustomColors()" />
+        <span>Custom Colors</span>
+      </label>
+      <label class="toggle" title="Feature 7 – Cancel all tooltip events before they render">
+        <input type="checkbox" [(ngModel)]="suppressTooltips" />
+        <span>No Tooltips</span>
+      </label>
+      <label class="toggle" title="Feature 8 – Inject a custom item into each visualization's context menu">
+        <input type="checkbox" [(ngModel)]="addCustomMenuItems" />
+        <span>Custom Menu</span>
+      </label>
+    </div>
+
+  </header>
+
+  <!-- ═══════════════════════ MAIN ═════════════════════════ -->
+  <div class="main">
+
+    <!-- RevealView (Features 1–10 wired via callbacks) -->
+    <rva-reveal-view
+      #rv
+      class="reveal"
+      [dashboard]="dashboard"
+      [options]="options"
+      [initialized]="onInitialized"
+      [editModeEntered]="onEditModeEntered"
+      [editModeExited]="onEditModeExited"
+      [dataPointClicked]="onDataPointClicked"
+      [seriesColorRequested]="onSeriesColorRequested"
+      [tooltipShowing]="onTooltipShowing"
+      [menuOpening]="onMenuOpening"
+      [saving]="onSaving"
+      [fieldsInitializing]="onFieldsInitializing"
+    ></rva-reveal-view>
+
+    <!-- Event Log side panel -->
+    <aside class="log-panel">
+      <div class="log-header">
+        <span>Event Log</span>
+        <button class="btn-sm" (click)="clearLog()">Clear</button>
+      </div>
+      <ul class="log-list">
+        <li *ngFor="let e of eventLog" class="log-entry" [ngClass]="e.type">
+          <span class="log-time">{{ e.time }}</span>
+          <span class="log-event">{{ e.event }}</span>
+          <span class="log-detail">{{ e.detail }}</span>
+        </li>
+      </ul>
+      <div class="log-legend">
+        <span class="dot info"></span>info &nbsp;
+        <span class="dot action"></span>action &nbsp;
+        <span class="dot warning"></span>warning
+      </div>
+    </aside>
+
+  </div>
+</div>
+
